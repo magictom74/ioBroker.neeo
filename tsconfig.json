@@ -1,0 +1,16 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build",                  // Kompilierte JS-Dateien landen hier
+    "rootDir": ".",                       // Wurzelverzeichnis deines TS-Codes
+    "target": "ES2020",                   // Moderne JavaScript-Zielversion
+    "module": "Node16",                 // Wichtig für Node/iobroker
+    "esModuleInterop": true,              // Ermöglicht "import" von CommonJS-Modulen
+    "resolveJsonModule": true,            // Für JSON-Dateien wie Adapter-Konfiguration
+    "strict": true,                       // Aktiviert striktes Typverhalten (gut!)
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true                  // Überspringt unnötige Typprüfungen in node_modules
+  },
+  "include": ["main.ts", "lib/**/*.ts"],
+  "exclude": ["node_modules", "build", "test"]
+}
