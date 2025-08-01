@@ -1,0 +1,111 @@
+{
+    "common": {
+        "name": "neeo",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
+        },
+        "titleLang": {
+            "en": "NEEO Remote Control",
+            "de": "Geborene Fernbedienung",
+            "ru": "Неэо пульт дистанционного управления",
+            "pt": "Controle remoto neeo",
+            "nl": "Neeo afstandsbediening",
+            "fr": "Télécommande neeo",
+            "it": "Controllo telecomando NEEO",
+            "es": "Control remoto neeo",
+            "pl": "Neeo pilot",
+            "uk": "Neeo пульт дистанційного керування",
+            "zh-cn": "NEEO遥控器"
+        },
+        "desc": {
+            "en": "ioBroker Adapter for NEEO Remote Control",
+            "de": "IOBROKER -Adapter für die Neeo -Fernbedienung",
+            "ru": "Адаптер iobroker для пульта дистанционного управления Neeo",
+            "pt": "Adaptador de IoBroker para Controle Remoto Neeo",
+            "nl": "Iobroker -adapter voor neeo afstandsbediening",
+            "fr": "Adaptateur iOBroker pour la télécommande Neeo",
+            "it": "Adattatore IoBroker per il telecomando NEEO",
+            "es": "Adaptador de iobroker para el control remoto Neeo",
+            "pl": "Adapter IOBRoker do pilota Neeo",
+            "uk": "адаптер iobroker для дистанційного керування Neeo",
+            "zh-cn": "NEEO遥控器的iObroker适配器"
+        },
+        "authors": [
+            "tom <teuber@magictom.ch>"
+        ],
+        "keywords": [
+            "neeo",
+            "iobroker"
+        ],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "neeo.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/magictom74/ioBroker.neeo/main/admin/neeo.png",
+        "readme": "https://github.com/magictom74/ioBroker.neeo/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": "7.0.23"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
