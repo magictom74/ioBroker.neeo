@@ -34,7 +34,7 @@
     "@iobroker/testing": "^5.0.4",
     "@tsconfig/node20": "^20.1.6",
     "@types/bonjour": "^3.5.13",
-    "chai": "^4.5.0",
+    "chai": "^5.2.1",
     "chai-as-promised": "^7.1.2",
     "mocha": "^11.7.1",
     "proxyquire": "^2.1.3",
