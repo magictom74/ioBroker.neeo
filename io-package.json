@@ -1,47 +1,23 @@
 {
+    "adminUI": {
+        "config": "json5"
+    },
     "common": {
         "name": "neeo",
-        "version": "0.0.1",
+        "version": "1.0.0",
         "news": {
             "0.0.1": {
                 "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
+                "de": "Erstveröffentlichung"
             }
         },
         "titleLang": {
             "en": "NEEO Remote Control",
-            "de": "Geborene Fernbedienung",
-            "ru": "Неэо пульт дистанционного управления",
-            "pt": "Controle remoto neeo",
-            "nl": "Neeo afstandsbediening",
-            "fr": "Télécommande neeo",
-            "it": "Controllo telecomando NEEO",
-            "es": "Control remoto neeo",
-            "pl": "Neeo pilot",
-            "uk": "Neeo пульт дистанційного керування",
-            "zh-cn": "NEEO遥控器"
+            "de": "NEEO Fernbedienung"
         },
         "desc": {
             "en": "ioBroker Adapter for NEEO Remote Control",
-            "de": "IOBROKER -Adapter für die Neeo -Fernbedienung",
-            "ru": "Адаптер iobroker для пульта дистанционного управления Neeo",
-            "pt": "Adaptador de IoBroker para Controle Remoto Neeo",
-            "nl": "Iobroker -adapter voor neeo afstandsbediening",
-            "fr": "Adaptateur iOBroker pour la télécommande Neeo",
-            "it": "Adattatore IoBroker per il telecomando NEEO",
-            "es": "Adaptador de iobroker para el control remoto Neeo",
-            "pl": "Adapter IOBRoker do pilota Neeo",
-            "uk": "адаптер iobroker для дистанційного керування Neeo",
-            "zh-cn": "NEEO遥控器的iObroker适配器"
+            "de": "ioBroker Adapter für die NEEO-Fernbedienung"
         },
         "authors": [
             "tom <teuber@magictom.ch>"
@@ -81,8 +57,9 @@
         ]
     },
     "native": {
-        "serverIp": "",
-        "serverPort": 3000
+        "brainIp": "",
+        "brainPort": 3000,
+        "pollInterval": 60
     },
     "objects": [],
     "instanceObjects": [

@@ -1,17 +1,27 @@
-# No dot-directories except github/vscode
-.*/
-!.vscode/
-!.github/
+# Build- und temporäre Dateien
+node_modules/
+build/
+dist/
 
-*.code-workspace
-node_modules
-nbproject
+# Editor-spezifisch
+.vscode/
+.github/
+.eslint*
 
-# npm package files
-iobroker.*.tgz
+# ioBroker dev-server Cache
+.dev-server/
+iobroker-data/
 
+# Logs, Dumps, Backups
+*.log
+*.tgz
+*.zip
+npm-debug.log*
+
+# Tests
+test/
+main.test.js
+
+# Betriebssystem
+.DS_Store
 Thumbs.db
-
-# i18n intermediate files
-admin/i18n/flat.txt
-admin/i18n/*/flat.txt

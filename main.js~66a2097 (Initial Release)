@@ -1,59 +1,52 @@
-import { Adapter, AdapterOptions } from '@iobroker/adapter-core';
-import { fetchNeeoBrainModel, AdapterConfig } from './lib/brain-discovery';
-import { BrainDevice, BrainRecipe, BrainRoom } from './lib/brain-types';
-import { DEBUG_ENABLED, API_BASE_URL, ROOMS, INFO, DEVICES, RECIPES, SCENARIOS, MACROS, COMMANDS, EXECUTE, ISACTIVE, POLL_INTERVAL, TRIGGER } from "./lib/config";
-import axios from 'axios';
-
-class NeeoAdapter extends Adapter {
-    private brainIp: string = "";
-    private brainPort: number = 0;
-    private pollInterval: number = POLL_INTERVAL;
-    private pollHandle: NodeJS.Timeout | null = null;
-    
-    constructor(options: Partial<AdapterOptions> = {}) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const adapter_core_1 = require("@iobroker/adapter-core");
+const brain_discovery_1 = require("./lib/brain-discovery");
+const config_1 = require("./lib/config");
+const axios_1 = __importDefault(require("axios"));
+class NeeoAdapter extends adapter_core_1.Adapter {
+    constructor(options = {}) {
         super({ ...options, name: "neeo" });
+        this.brainIp = "";
+        this.brainPort = 0;
+        this.pollInterval = config_1.POLL_INTERVAL;
+        this.pollHandle = null;
         this.on("ready", this.onReady.bind(this));
         this.on("unload", this.onUnload.bind(this));
-        (this as any).on("stateChange", this.onStateChange.bind(this));
+        this.on("stateChange", this.onStateChange.bind(this));
     }
-
     // Capitalize Names
-    private capitalize(text: string): string {
+    capitalize(text) {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
-
     // Start adapter
-    private async onReady(): Promise<void> {
+    async onReady() {
         this.log.info("Adapter started, connecting to NEEO Brain...");
-        
         // Subscribe to state
         this.subscribeStates("*");
-        
         // Fetch Brain data
-        const model = await fetchNeeoBrainModel(this);
+        const model = await (0, brain_discovery_1.fetchNeeoBrainModel)(this);
         if (!model) {
             this.log.error("Could not fetch NEEO Brain data. Check IP/Port in adapter settings.");
             return;
         }
-
         this.brainIp = model.brainIp ?? '';
         this.brainPort = model.brainPort ?? 0;
-        this.pollInterval = this.config.pollInterval ?? POLL_INTERVAL;
-
+        this.pollInterval = this.config.pollInterval ?? config_1.POLL_INTERVAL;
         this.log.info(`Brain model loaded: ${model.rooms.length} rooms, ${model.devices.length} devices, ${model.recipes.length} recipes, ${model.scenarios.length} scenarios`);
-
         // Delete old objects
         await this.clearAllObjects();
-        
         // Create Info folder
-        await this.setObjectNotExistsAsync(INFO, {
+        await this.setObjectNotExistsAsync(config_1.INFO, {
             type: "folder",
             common: { name: "Adapter Info" },
             native: {}
         });
-
         // Create object brainIp
-        await this.setObjectNotExistsAsync(`${INFO}.brainIp`, {
+        await this.setObjectNotExistsAsync(`${config_1.INFO}.brainIp`, {
             type: "state",
             common: {
                 name: "Brain IP Address",
@@ -64,10 +57,9 @@ class NeeoAdapter extends Adapter {
             },
             native: {}
         });
-        await this.setState(`${INFO}.brainIp`, this.brainIp, true);
-
+        await this.setState(`${config_1.INFO}.brainIp`, this.brainIp, true);
         // Create object brainPort
-        await this.setObjectNotExistsAsync(`${INFO}.brainPort`, {
+        await this.setObjectNotExistsAsync(`${config_1.INFO}.brainPort`, {
             type: "state",
             common: {
                 name: "Brain Port",
@@ -78,10 +70,9 @@ class NeeoAdapter extends Adapter {
             },
             native: {}
         });
-        await this.setState(`${INFO}.brainPort`, this.brainPort, true);
-
+        await this.setState(`${config_1.INFO}.brainPort`, this.brainPort, true);
         // Create object pollInterval
-        await this.setObjectNotExistsAsync(`${INFO}.pollInterval`, {
+        await this.setObjectNotExistsAsync(`${config_1.INFO}.pollInterval`, {
             type: "state",
             common: {
                 name: "Polling Interval (s)",
@@ -93,10 +84,9 @@ class NeeoAdapter extends Adapter {
             },
             native: {}
         });
-        await this.setState(`${INFO}.pollInterval`, this.pollInterval, true);
-
+        await this.setState(`${config_1.INFO}.pollInterval`, this.pollInterval, true);
         // Create object connection
-        await this.setObjectNotExistsAsync(`${INFO}.connection`, {
+        await this.setObjectNotExistsAsync(`${config_1.INFO}.connection`, {
             type: "state",
             common: {
                 name: "Brain Online",
@@ -107,55 +97,46 @@ class NeeoAdapter extends Adapter {
             },
             native: {}
         });
-        await this.setState(`${INFO}.connection`, false, true);
-        
+        await this.setState(`${config_1.INFO}.connection`, false, true);
         // Create rooms
         for (const room of model.rooms) {
-
-            const roomId = `${ROOMS}.${room.id}`;
+            const roomId = `${config_1.ROOMS}.${room.id}`;
             await this.setObjectNotExistsAsync(roomId, {
                 type: "channel",
                 common: { name: room.name },
                 native: room
             });
-
-            if (DEBUG_ENABLED) this.log.debug(`Created room object: ${roomId}`);
-
+            if (config_1.DEBUG_ENABLED)
+                this.log.debug(`Created room object: ${roomId}`);
             // Create device, recipe, scenario folders
-            await this.setObjectNotExistsAsync(`${roomId}.${DEVICES}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(DEVICES) }, 
-                native: {} 
+            await this.setObjectNotExistsAsync(`${roomId}.${config_1.DEVICES}`, {
+                type: "folder",
+                common: { name: this.capitalize(config_1.DEVICES) },
+                native: {}
             });
-
-            await this.setObjectNotExistsAsync(`${roomId}.${RECIPES}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(RECIPES) }, 
-                native: {} 
+            await this.setObjectNotExistsAsync(`${roomId}.${config_1.RECIPES}`, {
+                type: "folder",
+                common: { name: this.capitalize(config_1.RECIPES) },
+                native: {}
             });
-
-            await this.setObjectNotExistsAsync(`${roomId}.${SCENARIOS}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(SCENARIOS) }, 
-                native: {} 
+            await this.setObjectNotExistsAsync(`${roomId}.${config_1.SCENARIOS}`, {
+                type: "folder",
+                common: { name: this.capitalize(config_1.SCENARIOS) },
+                native: {}
             });
         }
-
         // Create devices
         for (const device of model.devices) {
-            const roomPath = `${ROOMS}.${device.roomId}`;
-            const devId = `${roomPath}.${DEVICES}.${device.id}`;
-
+            const roomPath = `${config_1.ROOMS}.${device.roomId}`;
+            const devId = `${roomPath}.${config_1.DEVICES}.${device.id}`;
             await this.setObjectNotExistsAsync(devId, {
                 type: "channel",
                 common: { name: device.name },
                 native: device
             });
-
-            if (DEBUG_ENABLED) this.log.debug(`Created device object: ${devId}`);
-
+            if (config_1.DEBUG_ENABLED)
+                this.log.debug(`Created device object: ${devId}`);
             const details = device.details || {};
-
             await this.setObjectNotExistsAsync(`${devId}.manufacturer`, {
                 type: "state",
                 common: {
@@ -168,7 +149,6 @@ class NeeoAdapter extends Adapter {
                 native: {}
             });
             await this.setState(`${devId}.manufacturer`, details.manufacturer ?? "", true);
-
             await this.setObjectNotExistsAsync(`${devId}.modelName`, {
                 type: "state",
                 common: {
@@ -181,7 +161,6 @@ class NeeoAdapter extends Adapter {
                 native: {}
             });
             await this.setState(`${devId}.modelName`, details.name ?? "", true);
-
             await this.setObjectNotExistsAsync(`${devId}.deviceType`, {
                 type: "state",
                 common: {
@@ -194,24 +173,21 @@ class NeeoAdapter extends Adapter {
                 native: {}
             });
             await this.setState(`${devId}.deviceType`, details.type ?? "", true);
-
             // Create macros and commands folder
-            await this.setObjectNotExistsAsync(`${devId}.${MACROS}`, {
+            await this.setObjectNotExistsAsync(`${devId}.${config_1.MACROS}`, {
                 type: "folder",
-                common: { name: this.capitalize(MACROS) },
+                common: { name: this.capitalize(config_1.MACROS) },
                 native: {}
             });
-
-            await this.setObjectNotExistsAsync(`${devId}.${COMMANDS}`, {
+            await this.setObjectNotExistsAsync(`${devId}.${config_1.COMMANDS}`, {
                 type: "folder",
-                common: { name: this.capitalize(COMMANDS) },
+                common: { name: this.capitalize(config_1.COMMANDS) },
                 native: {}
             });
-            
             // Create macros
             const macros = device.macros ?? [];
             for (const macro of macros) {
-                const macroId = `${devId}.${MACROS}.${macro.id}`;
+                const macroId = `${devId}.${config_1.MACROS}.${macro.id}`;
                 await this.setObjectNotExistsAsync(macroId, {
                     type: "state",
                     common: {
@@ -228,14 +204,13 @@ class NeeoAdapter extends Adapter {
                     }
                 });
                 await this.setState(macroId, false, true);
-
-                if (DEBUG_ENABLED) this.log.debug(`Created macro: ${macroId}`);
+                if (config_1.DEBUG_ENABLED)
+                    this.log.debug(`Created macro: ${macroId}`);
             }
-
             // Create commands
             const commands = device.genericMacros ?? [];
             for (const command of commands) {
-                const commandId = `${devId}.${COMMANDS}.${command.name.replace(/\s+/g, '_')}`;
+                const commandId = `${devId}.${config_1.COMMANDS}.${command.name.replace(/\s+/g, '_')}`;
                 await this.setObjectNotExistsAsync(commandId, {
                     type: "state",
                     common: {
@@ -248,23 +223,20 @@ class NeeoAdapter extends Adapter {
                     native: command
                 });
                 await this.setState(commandId, false, true);
-
-                if (DEBUG_ENABLED) this.log.debug(`Created command: ${commandId}`);
+                if (config_1.DEBUG_ENABLED)
+                    this.log.debug(`Created command: ${commandId}`);
             }
         }
-
         // Create recipes
         for (const recipe of model.recipes) {
-            const recId = `${ROOMS}.${recipe.roomId}.${RECIPES}.${recipe.id}`;
-
+            const recId = `${config_1.ROOMS}.${recipe.roomId}.${config_1.RECIPES}.${recipe.id}`;
             await this.setObjectNotExistsAsync(recId, {
                 type: "channel",
                 common: { name: recipe.name },
                 native: recipe
             });
-            
             // Create object isactive
-            await this.setObjectNotExistsAsync(`${recId}.${ISACTIVE}`, {
+            await this.setObjectNotExistsAsync(`${recId}.${config_1.ISACTIVE}`, {
                 type: "state",
                 common: {
                     name: "Active Status",
@@ -275,9 +247,8 @@ class NeeoAdapter extends Adapter {
                 },
                 native: { roomKey: recipe.roomId, recipeKey: recipe.id }
             });
-
             // Create object execute
-            await this.setObjectNotExistsAsync(`${recId}.${EXECUTE}`, {
+            await this.setObjectNotExistsAsync(`${recId}.${config_1.EXECUTE}`, {
                 type: "state",
                 common: {
                     name: "Execute Recipe",
@@ -288,141 +259,128 @@ class NeeoAdapter extends Adapter {
                 },
                 native: { roomKey: recipe.roomId, recipeKey: recipe.id }
             });
-
-            if (DEBUG_ENABLED) this.log.debug(`Created recipe object: ${recId}`);
+            if (config_1.DEBUG_ENABLED)
+                this.log.debug(`Created recipe object: ${recId}`);
         }
-
         // Start polling
         this.startRecipePolling(model.recipes);
     }
-
     // Monitor state change
-    private async onStateChange(id: string, state: ioBroker.State | null): Promise<void> {
-        if (!state || state.ack || state.val !== true) return;
-
+    async onStateChange(id, state) {
+        if (!state || state.ack || state.val !== true)
+            return;
         const obj = await this.getObjectAsync(id);
         const native = obj?.native || {};
-
         // Handle recipe execution
-        if (id.endsWith(`.${EXECUTE}`) && native.roomKey && native.recipeKey) {
+        if (id.endsWith(`.${config_1.EXECUTE}`) && native.roomKey && native.recipeKey) {
             await this.executeRecipe(native.roomKey, native.recipeKey);
             return;
         }
-
         // Handle macro trigger
-        if (id.includes(`.${MACROS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
+        if (id.includes(`.${config_1.MACROS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
             await this.triggerMacro(native.roomKey, native.deviceKey, native.macroKey);
             return;
         }
-
         // Handle generic command trigger
-        if (id.includes(`.${COMMANDS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
+        if (id.includes(`.${config_1.COMMANDS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
             await this.triggerMacro(native.roomKey, native.deviceKey, native.macroKey);
             return;
         }
-
         this.log.warn(`Unhandled state change: ${id}`);
     }
-
     // Trigger macro
-    private async triggerMacro(roomKey: string, deviceKey: string, macroKey: string): Promise<void> {
-        const url = `http://${this.brainIp}:${this.brainPort}/${API_BASE_URL}/rooms/${roomKey}/devices/${deviceKey}/macros/${macroKey}/${TRIGGER}`;
+    async triggerMacro(roomKey, deviceKey, macroKey) {
+        const url = `http://${this.brainIp}:${this.brainPort}/${config_1.API_BASE_URL}/rooms/${roomKey}/devices/${deviceKey}/macros/${macroKey}/${config_1.TRIGGER}`;
         try {
-            await axios.get(url);
+            await axios_1.default.get(url);
             this.log.info(`Triggered macro ${macroKey} on device ${deviceKey} in room ${roomKey}`);
-        } catch (err: any) {
+        }
+        catch (err) {
             this.log.error(`Failed to trigger macro: ${err.message}`);
         }
     }
-
     // Execute recipe
-    private async executeRecipe(roomKey: string, recipeKey: string): Promise<void> {
-    const url = `http://${this.brainIp}:${this.brainPort}/${API_BASE_URL}/rooms/${roomKey}/recipes/${recipeKey}/${EXECUTE}`;
+    async executeRecipe(roomKey, recipeKey) {
+        const url = `http://${this.brainIp}:${this.brainPort}/${config_1.API_BASE_URL}/rooms/${roomKey}/recipes/${recipeKey}/${config_1.EXECUTE}`;
         try {
-            await axios.get(url);
+            await axios_1.default.get(url);
             this.log.info(`Executed recipe ${recipeKey} in room ${roomKey}`);
-        } catch (err: any) {
+        }
+        catch (err) {
             this.log.error(`Failed to execute recipe: ${err.message}`);
         }
     }
-
     // Polling active state of recipes
-    private startRecipePolling(recipes: BrainRecipe[]): void {
-        const intervalSec = Math.max(5, Number(this.pollInterval) || POLL_INTERVAL);
+    startRecipePolling(recipes) {
+        const intervalSec = Math.max(5, Number(this.pollInterval) || config_1.POLL_INTERVAL);
         const intervalMs = intervalSec * 1000;
-
-        if (this.pollHandle) clearInterval(this.pollHandle);
-
+        if (this.pollHandle)
+            clearInterval(this.pollHandle);
         this.pollHandle = setInterval(async () => {
             const timestamp = new Date().toISOString();
             this.log.debug(`Polling recipes at ${timestamp}`);
-
             const brainReachable = await this.testBrainOnline();
-
-            if (!brainReachable) return;
-
+            if (!brainReachable)
+                return;
             for (const recipe of recipes) {
-                const id = `${ROOMS}.${recipe.roomId}.${RECIPES}.${recipe.id}.${ISACTIVE}`;
-                const url = `http://${this.brainIp}:${this.brainPort}/${API_BASE_URL}/${ROOMS}/${recipe.roomId}/${RECIPES}/${recipe.id}/${ISACTIVE}`;
+                const id = `${config_1.ROOMS}.${recipe.roomId}.${config_1.RECIPES}.${recipe.id}.${config_1.ISACTIVE}`;
+                const url = `http://${this.brainIp}:${this.brainPort}/${config_1.API_BASE_URL}/${config_1.ROOMS}/${recipe.roomId}/${config_1.RECIPES}/${recipe.id}/${config_1.ISACTIVE}`;
                 try {
-                    const res = await axios.get(url);
+                    const res = await axios_1.default.get(url);
                     const active = res.data?.active ?? false;
                     await this.setState(id, active, true);
-
-                    if (DEBUG_ENABLED) {
+                    if (config_1.DEBUG_ENABLED) {
                         this.log.debug(`Polled recipe "${recipe.name}" [${recipe.id}] in room "${recipe.roomId}": active = ${active}`);
                     }
-
-                } catch (err: any) {
+                }
+                catch (err) {
                     this.log.warn(`Polling failed for recipe ${recipe.name}: ${err.message}`);
                 }
             }
         }, intervalMs);
     }
-    
     // Check if brain is online
-    private async testBrainOnline(): Promise<boolean> {
-        const config = this.config as AdapterConfig;
-        const url = `http://${this.brainIp}:${this.brainPort}/${API_BASE_URL}`;
+    async testBrainOnline() {
+        const config = this.config;
+        const url = `http://${this.brainIp}:${this.brainPort}/${config_1.API_BASE_URL}`;
         try {
-            await axios.get(url, { timeout: 5000 });
+            await axios_1.default.get(url, { timeout: 5000 });
             await this.setState('info.connection', true, true);
             return true;
-        } catch {
+        }
+        catch {
             await this.setState('info.connection', false, true);
             return false;
         }
     }
-
     // Delete all objects
-    private async clearAllObjects(): Promise<void> {
+    async clearAllObjects() {
         const allObjects = await this.getAdapterObjectsAsync();
         let deleted = 0;
-
         for (const id in allObjects) {
             await this.delObjectAsync(id, { recursive: true });
             deleted++;
         }
-
-        if (DEBUG_ENABLED) this.log.debug(`Deleted ${deleted} existing objects`);
+        if (config_1.DEBUG_ENABLED)
+            this.log.debug(`Deleted ${deleted} existing objects`);
     }
-
-
     // Shutdown adapter
-    private onUnload(callback: () => void): void {
+    onUnload(callback) {
         try {
             this.log.info("Adapter is shutting down...");
-            if (this.pollHandle) clearInterval(this.pollHandle);
+            if (this.pollHandle)
+                clearInterval(this.pollHandle);
             callback();
-        } catch {
+        }
+        catch {
             callback();
         }
     }
 }
-
 // @ts-ignore because ioBroker expects the adapter instance to be exported like this
 if (require.main !== module) {
-    module.exports = (options: Partial<AdapterOptions> | undefined) => new NeeoAdapter(options);
-} else {
+    module.exports = (options) => new NeeoAdapter(options);
+}
+else {
     new NeeoAdapter();
 }

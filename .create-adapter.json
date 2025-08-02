@@ -3,25 +3,44 @@
     "target": "directory",
     "adapterName": "neeo",
     "title": "NEEO Remote Control",
+<<<<<<< HEAD
     "description": "ioBroker Adapter for NEEO Remote Control",
     "keywords": [
         "neeo",
         "iobroker"
+=======
+    "description": "ioBroker Adapter for NEEO Brain",
+    "keywords": [
+        "neeo"
+>>>>>>> 66a2097 (Initial Release)
     ],
     "expert": "yes",
     "features": [
         "adapter"
     ],
     "adminFeatures": [],
+<<<<<<< HEAD
     "type": "multimedia",
+=======
+    "type": "iot-systems",
+>>>>>>> 66a2097 (Initial Release)
     "startMode": "daemon",
     "connectionType": "local",
     "dataSource": "poll",
     "connectionIndicator": "yes",
     "language": "JavaScript",
+<<<<<<< HEAD
     "nodeVersion": "18",
     "adminUi": "json",
     "tools": [],
+=======
+    "nodeVersion": "20",
+    "adminUi": "json",
+    "tools": [
+        "ESLint",
+        "type checking"
+    ],
+>>>>>>> 66a2097 (Initial Release)
     "releaseScript": "yes",
     "devServer": "yes",
     "devServerPort": 8081,

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.neeo",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "ioBroker Adapter for NEEO Remote Control",
   "author": {
     "name": "tom",
@@ -14,14 +14,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:magictom74/ioBroker.neeo.git"
+    "url": "https://github.com/magictom74/ioBroker.neeo"
   },
   "engines": {
     "node": ">= 18"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "bonjour": "^3.5.0",
+    "bonjour": "^3.3.0",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
@@ -52,7 +52,8 @@
     "main.js"
   ],
   "scripts": {
-    "dev": "iobroker-dev",
+    "build": "tsc && mkdir -p lib && cp -ru build/lib/* lib/ && cp -u build/main.js main.js",
+    "dev": "npm run build && dev-server watch default",
     "test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
     "test:package": "mocha test/package --exit",
     "test:integration": "mocha test/integration --exit",

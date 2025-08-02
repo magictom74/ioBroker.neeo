@@ -1,0 +1,13 @@
+export const DEBUG_ENABLED = false;
+export const API_BASE_URL = 'v1/projects/home';
+export const ROOMS = 'rooms';
+export const INFO = 'info';
+export const DEVICES = 'devices';
+export const RECIPES = 'recipes';
+export const SCENARIOS = 'scenarios';
+export const MACROS = 'macros';
+export const COMMANDS = 'commands';
+export const ISACTIVE = 'isactive';
+export const EXECUTE = 'execute';
+export const TRIGGER = 'trigger';
+export const POLL_INTERVAL = 15;

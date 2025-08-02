@@ -1,0 +1,43 @@
+{
+  type: 'tabs',
+  i18n: true,
+  items: {
+    main: {
+      type: 'panel',
+      label: 'Main settings',
+      items: {
+        brainIp: {
+          type: 'text',
+          label: 'brainIp',
+          default: '',
+          xs: 12,
+          sm: 12,
+          md: 9,
+          lg: 9,
+        },
+        brainPort: {
+          type: 'number',
+          label: 'brainPort',
+          default: 3000,
+          min: 1,
+          max: 65535,
+          xs: 12,
+          sm: 12,
+          md: 9,
+          lg: 9,
+        },
+        pollInterval: {
+          type: 'number',
+          label: 'pollInterval',
+          default: 60,
+          xs: 12,
+          min: 5,
+          max: 3600,
+          sm: 12,
+          md: 9,
+          lg: 9,
+        }
+      }
+    }
+  }
+}
