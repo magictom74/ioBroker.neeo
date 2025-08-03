@@ -43,8 +43,12 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-1.0.0   Initiale Version
-1.0.1   Scenario und Cusotm State pro Raum hinzugefügt
+
+### 1.0.1
+* Szenario und Custom Status pro Raum hinzugefügt
+
+### 1.0.0
+* Initiale Version
 
 ## Lizenz
 MIT License © 2025 tom

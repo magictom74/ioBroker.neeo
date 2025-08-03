@@ -1,5 +1,7 @@
 {
-    "neeo adapter settings": "Налаштування адаптера для neeo",
-    "option1": "Варіант1",
-    "option2": "Варіант2"
+  "Main settings": "主要设置",
+  "brainIp": "Brain 的 IP 地址",
+  "brainPort": "Brain 的端口",
+  "pollInterval": "轮询间隔",
+  "debugMode": "调试模式"
 }

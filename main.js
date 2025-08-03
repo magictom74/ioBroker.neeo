@@ -639,10 +639,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         }
         this.log.debug(`Deleted ${deleted} existing objects`);
     }
-    // Sleep function
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+
     // Shutdown adapter
     onUnload(callback) {
         try {

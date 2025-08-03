@@ -1,5 +1,7 @@
 {
-    "neeo adapter settings": "Paramètres d'adaptateur pour neeo",
-    "option1": "option1",
-    "option2": "Option2"
+  "Main settings": "Paramètres principaux",
+  "brainIp": "Adresse IP du Brain",
+  "brainPort": "Port du Brain",
+  "pollInterval": "Intervalle d'interrogation",
+  "debugMode": "Mode débogage"
 }

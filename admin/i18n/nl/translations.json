@@ -1,5 +1,7 @@
 {
-    "neeo adapter settings": "Adapterinstellingen voor neeo",
-    "option1": "Option1",
-    "option2": "Optie2"
+  "Main settings": "Hoofdinstellingen",
+  "brainIp": "IP-adres van Brain",
+  "brainPort": "Poort van Brain",
+  "pollInterval": "Pollinterval",
+  "debugMode": "Debugmodus"
 }

@@ -712,11 +712,6 @@ class NeeoAdapter extends Adapter {
         this.log.debug(`Deleted ${deleted} existing objects`);
     }
 
-    // Sleep function
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     // Shutdown adapter
     private onUnload(callback: () => void): void {
         try {
