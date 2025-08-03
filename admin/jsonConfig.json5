@@ -38,7 +38,7 @@
           lg: 9,
         },
         debugMode: {
-          type: 'bool',
+          type: 'checkbox',
           label: 'debugMode',
           default: false,
           xs: 12,
