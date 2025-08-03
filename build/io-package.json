@@ -4,21 +4,8 @@
     },
     "common": {
         "name": "neeo",
-        "version": "1.0.1",
+        "version": "1.0.0",
         "news": {
-            "1.0.1": {
-                "en": "Scenario and custom state per room added",
-                "de": "Szenario und Custom Status pro Raum hinzugefügt",
-                "es": "Escenario y estado personalizado por habitación añadidos",
-                "fr": "Scénario et état personnalisé par pièce ajoutés",
-                "it": "Aggiunti scenario e stato personalizzato per stanza",
-                "nl": "Scenario en aangepaste status per kamer toegevoegd",
-                "pl": "Dodano scenariusz i niestandardowy stan dla każdego pokoju",
-                "pt": "Cenário e estado personalizado por sala adicionados",
-                "ru": "Добавлены сценарии и пользовательские состояния для каждой комнаты",
-                "uk": "Додано сценарії та власні стани для кожної кімнати",
-                "zh-cn": "添加了每个房间的场景和自定义状态"
-            },
             "1.0.0": {
                 "en": "Initial release",
                 "de": "Erstveröffentlichung",
