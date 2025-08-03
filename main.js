@@ -639,7 +639,6 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         }
         this.log.debug(`Deleted ${deleted} existing objects`);
     }
-
     // Shutdown adapter
     onUnload(callback) {
         try {

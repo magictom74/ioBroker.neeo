@@ -6,18 +6,58 @@
         "name": "neeo",
         "version": "1.0.0",
         "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung"
+            "1.0.1": {
+                "en": "Scenario and custom state per room added",
+                "de": "Szenario und Custom Status pro Raum hinzugefügt",
+                "es": "Escenario y estado personalizado por habitación añadidos",
+                "fr": "Scénario et état personnalisé par pièce ajoutés",
+                "it": "Aggiunti scenario e stato personalizzato per stanza",
+                "nl": "Scenario en aangepaste status per kamer toegevoegd",
+                "pl": "Dodano scenariusz i niestandardowy stan dla każdego pokoju",
+                "pt": "Cenário e estado personalizado por sala adicionados",
+                "ru": "Добавлены сценарии и пользовательские состояния для каждой комнаты",
+                "uk": "Додано сценарії та власні стани для кожної кімнати",
+                "zh-cn": "添加了每个房间的场景和自定义状态"
+            },
+            "1.0.0": {
+                "en": "Initial release",
+                "de": "Erstveröffentlichung",
+                "es": "Versión inicial",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "nl": "Eerste uitgave",
+                "pl": "Pierwsze wydanie",
+                "pt": "Lançamento inicial",
+                "ru": "Первый выпуск",
+                "uk": "Початковий реліз",
+                "zh-cn": "初始版本"
             }
         },
         "titleLang": {
             "en": "NEEO Remote Control",
-            "de": "NEEO Fernbedienung"
+            "de": "NEEO Fernbedienung",
+            "es": "NEEO Remote Control",
+            "fr": "NEEO Remote Control",
+            "it": "NEEO Remote Control",
+            "nl": "NEEO Remote Control",
+            "pl": "NEEO Remote Control",
+            "pt": "NEEO Remote Control",
+            "ru": "NEEO Remote Control",
+            "uk": "NEEO Remote Control",
+            "zh-cn": "NEEO Remote Control"
         },
         "desc": {
             "en": "ioBroker Adapter for NEEO Remote Control",
-            "de": "ioBroker Adapter für die NEEO-Fernbedienung"
+            "de": "ioBroker Adapter für die NEEO-Fernbedienung",
+            "es": "Adaptador de ioBroker para NEEO Remote Control",
+            "fr": "Adaptateur ioBroker pour NEEO Remote Control",
+            "it": "Adattatore ioBroker per NEEO Remote Control",
+            "nl": "ioBroker-adapter voor NEEO Remote Control",
+            "pl": "Adapter ioBroker dla NEEO Remote Control",
+            "pt": "Adaptador ioBroker para NEEO Remote Control",
+            "ru": "Адаптер ioBroker для NEEO Remote Control",
+            "uk": "Адаптер ioBroker для NEEO Remote Control",
+            "zh-cn": "适用于 NEEO Remote Control 的 ioBroker 适配器"
         },
         "authors": [
             "tom <teuber@magictom.ch>"
@@ -52,7 +92,7 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=7.0.0"
+                "admin": ">=7.4.10"
             }
         ]
     },
