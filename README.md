@@ -43,8 +43,7 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 1.0.3 (2025-08-03)
 
 * Debug mode improved
 
