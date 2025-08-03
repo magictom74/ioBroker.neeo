@@ -50,5 +50,5 @@ npm install iobroker.neeo
 ### 1.0.0
 * Initiale Version
 
-## Lizenz
+## License
 MIT License © 2025 tom
