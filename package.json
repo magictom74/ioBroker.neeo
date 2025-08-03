@@ -1,6 +1,6 @@
 {
   "name": "iobroker.neeo",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "ioBroker Adapter for NEEO Remote Control",
   "author": {
     "name": "tom",
@@ -27,7 +27,7 @@
     "main.js"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "build": "tsc && mkdir -p lib && cp -ru build/lib/* lib/ && cp -u build/main.js main.js",
