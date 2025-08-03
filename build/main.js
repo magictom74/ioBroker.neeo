@@ -14,6 +14,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         this.brainPort = 0;
         this.pollInterval = config_1.POLL_INTERVAL;
         this.pollHandle = null;
+        this.roomPowerTimeout = null;
         this.debugMode = false;
         this.on("ready", this.onReady.bind(this));
         this.on("unload", this.onUnload.bind(this));
@@ -543,7 +544,12 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                         this.log.error(`Room powerToggle (on) failed: ${err.message}`);
                     }
                 };
-                delay > 0 ? setTimeout(exec, delay) : await exec();
+                if (delay > 0) {
+                    this.roomPowerTimeout = setTimeout(exec, delay);
+                }
+                else {
+                    await exec();
+                }
                 return;
             }
         }
@@ -645,6 +651,8 @@ class NeeoAdapter extends adapter_core_1.Adapter {
             this.log.info("Adapter is shutting down...");
             if (this.pollHandle)
                 clearInterval(this.pollHandle);
+            if (this.roomPowerTimeout)
+                clearTimeout(this.roomPowerTimeout);
             callback();
         }
         catch {
