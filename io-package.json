@@ -59,7 +59,8 @@
     "native": {
         "brainIp": "",
         "brainPort": 3000,
-        "pollInterval": 60
+        "pollInterval": 60,
+        "debugMode": false
     },
     "objects": [],
     "instanceObjects": [

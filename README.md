@@ -15,17 +15,24 @@ Er erkennt Räume, Geräte, Rezepte, Szenarien und stellt diese als Objekte in i
 Die Verbindung erfolgt wahlweise über manuelle IP-Konfiguration oder automatische mDNS-Erkennung.
 
 ### Funktionen
-- Automatische Erkennung des NEEO Brain via mDNS
-- Erstellung von Objekten für:
-  - Räume, Geräte, Makros
-  - Globale Kommandos, Szenarien und Rezepte
-- Ausführung von Recipes und Makros per ioBroker State
-- Custom State und Commands pro Raum
+- Automatische Erkennung des NEEO Brain via mDNS oder IP / Port in Settings
+- Erstellung von Objekten:
+  - Räume
+  - Geräte pro Raum mit Makros und Kommandos
+  - Rezepte pro Raum mit Status und Power Toggle
+  - Szenarien (zusammengehörende Rezepte) pro Raum Status und Power Toggle
 - Polling von Recipes mit Statusaktualisierung
-- Statusüberwachung über `info.connection`
+- Brain Online Statusüberwachung über `info.connection`
+
+## Custom Features
+- Pro Raum Status (isactive) und Power Toggle (powerToggle) verfügbar 
+- Über folgende Objekte konfigurierbar (müssen selber angelegt werden)
+  - Standard Raum Einschaltrezept über 0_userdata.0.neeo.<Instanz>.<RaumId>.roomDefault (string)
+  - Einschaltverzögerung pro Raum über 0_userdata.0.neeo.<Instanz>.<RaumId>.roomDelay (number)
 
 ## Known Issues
-- Statusüberwachung Host erst nach erstem Pollzyklus grün
+- Statusüberwachung Brain erst nach erstem Pollzyklus
+- Status isactive von Rezepten nach powerToggle erst nach Pollzyklus aktuell (Status Raum und Szenarien sind ok)
 - Tests nicht verfügbar
 
 ## Installation
@@ -37,6 +44,7 @@ npm install iobroker.neeo
 
 ## Changelog
 1.0.0   Initiale Version
+1.0.1   Scenario und Cusotm State pro Raum hinzugefügt
 
 ## Lizenz
 MIT License © 2025 tom

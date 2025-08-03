@@ -13,8 +13,4 @@
   },
   "include": ["main.ts", "lib/**/*.ts"],
   "exclude": ["node_modules", "build", "test"]
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 66a2097 (Initial Release)

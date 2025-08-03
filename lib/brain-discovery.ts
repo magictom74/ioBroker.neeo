@@ -2,7 +2,7 @@ import axios from "axios";
 import bonjour from "bonjour";
 import { AdapterInstance } from "@iobroker/adapter-core";
 import { NeeoBrainModel, BrainDevice, BrainRecipe, BrainRoom, BrainMacro, BrainScenario } from "./brain-types";
-import { DEBUG_ENABLED, API_BASE_URL, INFO } from "./config";
+import { API_BASE_URL } from "./config";
 
 interface DiscoveryResult {
     ip: string;
@@ -54,7 +54,7 @@ export async function fetchNeeoBrainModel(adapter: AdapterInstance): Promise<Nee
     }
 
     const baseUrl = `http://${ip}:${port}/${API_BASE_URL}`;
-    adapter.log.debug(`Fetching Brain model from ${baseUrl}`);
+    if (adapter.config.debugMode) adapter.log.debug(`Fetching Brain model from ${baseUrl}`);
 
     try {
 
@@ -78,7 +78,7 @@ export async function fetchNeeoBrainModel(adapter: AdapterInstance): Promise<Nee
 
             // Check if room has content
             if (!hasDevices && !hasRecipes && !hasScenarios) {
-                if (DEBUG_ENABLED) adapter.log.debug(`Skipping room ${roomData.name} (${roomId}) - empty content`);
+                if (adapter.config.debugMode) adapter.log.debug(`Skipping room ${roomData.name} (${roomId}) - empty content`);
                 continue;
             }
 
@@ -136,7 +136,8 @@ export async function fetchNeeoBrainModel(adapter: AdapterInstance): Promise<Nee
                         deviceName: recipe.deviceName ?? "",
                         deviceClass: recipe.mainDeviceType ?? "",
                         power: recipe.steps?.find((s: any) => s.componentName)?.componentName ?? "",
-                        isTurnedOn: recipe.enabled ?? false
+                        isTurnedOn: recipe.enabled ?? false,
+                        scenarioKey: recipe.scenarioKey ?? undefined
                     };
 
                     room.recipes.push(brainRecipe);

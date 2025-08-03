@@ -1,12 +1,7 @@
 {
-<<<<<<< HEAD
-    "neeo adapter settings": "Adaptereinstellungen für neeo",
-    "option1": "Option1",
-    "option2": "Option2"
-=======
     "Main settings": "Adaptereinstellungen",
     "brainIp": "Brain IP-Adresse",
     "brainPort": "Brain Port",
-    "pollInterval": "Poll Intervall"
->>>>>>> 66a2097 (Initial Release)
+    "pollInterval": "Poll Intervall",
+    "debugMode": "Debug Mode"
 }

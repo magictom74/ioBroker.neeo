@@ -1,7 +1,7 @@
 import { Adapter, AdapterOptions } from '@iobroker/adapter-core';
 import { fetchNeeoBrainModel, AdapterConfig } from './lib/brain-discovery';
-import { BrainDevice, BrainRecipe, BrainRoom } from './lib/brain-types';
-import { DEBUG_ENABLED, API_BASE_URL, ROOMS, INFO, DEVICES, RECIPES, SCENARIOS, MACROS, COMMANDS, EXECUTE, ISACTIVE, POLL_INTERVAL, TRIGGER } from "./lib/config";
+import { BrainRecipe } from './lib/brain-types';
+import { API_BASE_URL, ROOMS, INFO, DEVICES, RECIPES, SCENARIOS, MACROS, COMMANDS, EXECUTE, ISACTIVE, POLL_INTERVAL, TRIGGER, CUSTOM_PATH } from "./lib/config";
 import axios from 'axios';
 
 class NeeoAdapter extends Adapter {
@@ -9,6 +9,7 @@ class NeeoAdapter extends Adapter {
     private brainPort: number = 0;
     private pollInterval: number = POLL_INTERVAL;
     private pollHandle: NodeJS.Timeout | null = null;
+    private debugMode: boolean = false;
     
     constructor(options: Partial<AdapterOptions> = {}) {
         super({ ...options, name: "neeo" });
@@ -24,6 +25,7 @@ class NeeoAdapter extends Adapter {
 
     // Start adapter
     private async onReady(): Promise<void> {
+        this.debugMode = this.config.debugMode ?? false;
         this.log.info("Adapter started, connecting to NEEO Brain...");
         
         // Subscribe to state
@@ -58,7 +60,7 @@ class NeeoAdapter extends Adapter {
             common: {
                 name: "Brain IP Address",
                 type: "string",
-                role: "info.ip",
+                role: "text",
                 read: true,
                 write: false
             },
@@ -72,7 +74,7 @@ class NeeoAdapter extends Adapter {
             common: {
                 name: "Brain Port",
                 type: "number",
-                role: "info.port",
+                role: "info",
                 read: true,
                 write: false
             },
@@ -119,26 +121,92 @@ class NeeoAdapter extends Adapter {
                 native: room
             });
 
-            if (DEBUG_ENABLED) this.log.debug(`Created room object: ${roomId}`);
-
-            // Create device, recipe, scenario folders
-            await this.setObjectNotExistsAsync(`${roomId}.${DEVICES}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(DEVICES) }, 
-                native: {} 
+            // Create object isactive
+            await this.setObjectNotExistsAsync(`${roomId}.isactive`, {
+                type: "state",
+                common: {
+                    name: "Recipe Status",
+                    type: "boolean",
+                    role: "indicator.status",
+                    read: true,
+                    write: false
+                },
+                native: { roomId: room.id }
             });
 
-            await this.setObjectNotExistsAsync(`${roomId}.${RECIPES}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(RECIPES) }, 
-                native: {} 
+            // Create object powerToggle
+            await this.setObjectNotExistsAsync(`${roomId}.powerToggle`, {
+                type: "state",
+                common: {
+                    name: "Room Power Toggle",
+                    type: "boolean",
+                    role: "button",
+                    read: false,
+                    write: true
+                },
+                native: { roomId: room.id }
             });
 
-            await this.setObjectNotExistsAsync(`${roomId}.${SCENARIOS}`, { 
-                type: "folder", 
-                common: { name: this.capitalize(SCENARIOS) }, 
-                native: {} 
+            // Create custom objects in 0_userdata.<instance>.<room-id>
+            const instance = this.instance;
+            const customPath = `${CUSTOM_PATH}.${instance}.${room.id}`;
+
+            // Create object roomDefault
+            await this.setForeignObjectNotExistsAsync(`${customPath}.roomDefault`, {
+                type: "state",
+                common: {
+                    name: "Room Default recipe",
+                    type: "string",
+                    role: "text",
+                    read: true,
+                    write: true,
+                },
+                native: {}
             });
+
+            // Create object roomDelay
+            await this.setForeignObjectNotExistsAsync(`${customPath}.roomDelay`, {
+                type: "state",
+                common: {
+                    name: "Room Power-On Delay (s)",
+                    type: "number",
+                    unit: "s",
+                    role: "value.interval",
+                    read: true,
+                    write: true,
+                    def: 0
+                },
+                native: {}
+            });
+
+            if (this.debugMode) this.log.debug(`Created room object: ${roomId}`);
+
+            // Create device folder
+            if (room.devices && room.devices.length > 0) {
+                await this.setObjectNotExistsAsync(`${roomId}.${DEVICES}`, { 
+                    type: "folder", 
+                    common: { name: this.capitalize(DEVICES) }, 
+                    native: {} 
+                });
+            }
+            
+            // Create recipe folder
+            if (room.recipes && room.recipes.length > 0) {
+                await this.setObjectNotExistsAsync(`${roomId}.${RECIPES}`, { 
+                    type: "folder", 
+                    common: { name: this.capitalize(RECIPES) }, 
+                    native: {} 
+                });
+            }
+
+            // Create scenario folder
+            if (room.scenarios && room.scenarios.length > 0) {
+                await this.setObjectNotExistsAsync(`${roomId}.${SCENARIOS}`, {
+                    type: "folder",
+                    common: { name: this.capitalize(SCENARIOS) },
+                    native: {}
+                });
+            }
         }
 
         // Create devices
@@ -152,16 +220,17 @@ class NeeoAdapter extends Adapter {
                 native: device
             });
 
-            if (DEBUG_ENABLED) this.log.debug(`Created device object: ${devId}`);
+            if (this.debugMode) this.log.debug(`Created device object: ${devId}`);
 
             const details = device.details || {};
 
+            // Create object manufacturer
             await this.setObjectNotExistsAsync(`${devId}.manufacturer`, {
                 type: "state",
                 common: {
                     name: "Manufacturer",
                     type: "string",
-                    role: "info",
+                    role: "text",
                     read: true,
                     write: false
                 },
@@ -169,12 +238,13 @@ class NeeoAdapter extends Adapter {
             });
             await this.setState(`${devId}.manufacturer`, details.manufacturer ?? "", true);
 
+            // Create object modelName
             await this.setObjectNotExistsAsync(`${devId}.modelName`, {
                 type: "state",
                 common: {
                     name: "Model Name",
                     type: "string",
-                    role: "info",
+                    role: "text",
                     read: true,
                     write: false
                 },
@@ -182,12 +252,13 @@ class NeeoAdapter extends Adapter {
             });
             await this.setState(`${devId}.modelName`, details.name ?? "", true);
 
+            // Create object deviceType
             await this.setObjectNotExistsAsync(`${devId}.deviceType`, {
                 type: "state",
                 common: {
                     name: "Device Type",
                     type: "string",
-                    role: "info",
+                    role: "text",
                     read: true,
                     write: false
                 },
@@ -195,61 +266,63 @@ class NeeoAdapter extends Adapter {
             });
             await this.setState(`${devId}.deviceType`, details.type ?? "", true);
 
-            // Create macros and commands folder
-            await this.setObjectNotExistsAsync(`${devId}.${MACROS}`, {
-                type: "folder",
-                common: { name: this.capitalize(MACROS) },
-                native: {}
-            });
-
-            await this.setObjectNotExistsAsync(`${devId}.${COMMANDS}`, {
-                type: "folder",
-                common: { name: this.capitalize(COMMANDS) },
-                native: {}
-            });
-            
-            // Create macros
-            const macros = device.macros ?? [];
-            for (const macro of macros) {
-                const macroId = `${devId}.${MACROS}.${macro.id}`;
-                await this.setObjectNotExistsAsync(macroId, {
-                    type: "state",
-                    common: {
-                        name: macro.label || macro.name,
-                        type: "boolean",
-                        role: "button",
-                        read: false,
-                        write: true
-                    },
-                    native: {
-                        macroKey: macro.id,
-                        deviceKey: device.id,
-                        roomKey: device.roomId
-                    }
+            // Create macros if available
+            if (device.macros && device.macros.length > 0) {
+                
+                await this.setObjectNotExistsAsync(`${devId}.${MACROS}`, {
+                    type: "folder",
+                    common: { name: this.capitalize(MACROS) },
+                    native: {}
                 });
-                await this.setState(macroId, false, true);
 
-                if (DEBUG_ENABLED) this.log.debug(`Created macro: ${macroId}`);
+                for (const macro of device.macros) {
+                    const macroId = `${devId}.${MACROS}.${macro.id}`;
+                    await this.setObjectNotExistsAsync(macroId, {
+                        type: "state",
+                        common: {
+                            name: macro.label || macro.name,
+                            type: "boolean",
+                            role: "button",
+                            read: false,
+                            write: true
+                        },
+                        native: {
+                            macroKey: macro.id,
+                            deviceKey: device.id,
+                            roomKey: device.roomId
+                        }
+                    });
+                    await this.setState(macroId, false, true);
+
+                    if (this.debugMode) this.log.debug(`Created macro: ${macroId}`);
+                }
             }
-
-            // Create commands
-            const commands = device.genericMacros ?? [];
-            for (const command of commands) {
-                const commandId = `${devId}.${COMMANDS}.${command.name.replace(/\s+/g, '_')}`;
-                await this.setObjectNotExistsAsync(commandId, {
-                    type: "state",
-                    common: {
-                        name: command.label || command.name,
-                        type: "boolean",
-                        role: "button",
-                        read: false,
-                        write: true
-                    },
-                    native: command
+            
+            // Create commands if available
+            if (device.genericMacros && device.genericMacros.length > 0) {
+                await this.setObjectNotExistsAsync(`${devId}.${COMMANDS}`, {
+                    type: "folder",
+                    common: { name: this.capitalize(COMMANDS) },
+                    native: {}
                 });
-                await this.setState(commandId, false, true);
 
-                if (DEBUG_ENABLED) this.log.debug(`Created command: ${commandId}`);
+                for (const command of device.genericMacros) {
+                    const commandId = `${devId}.${COMMANDS}.${command.name.replace(/\s+/g, '_')}`;
+                    await this.setObjectNotExistsAsync(commandId, {
+                        type: "state",
+                        common: {
+                            name: command.label || command.name,
+                            type: "boolean",
+                            role: "button",
+                            read: false,
+                            write: true
+                        },
+                        native: command
+                    });
+                    await this.setState(commandId, false, true);
+
+                    if (this.debugMode) this.log.debug(`Created command: ${commandId}`);
+                }
             }
         }
 
@@ -289,7 +362,94 @@ class NeeoAdapter extends Adapter {
                 native: { roomKey: recipe.roomId, recipeKey: recipe.id }
             });
 
-            if (DEBUG_ENABLED) this.log.debug(`Created recipe object: ${recId}`);
+            if (this.debugMode) this.log.debug(`Created recipe object: ${recId}`);
+        }
+
+        // Create scenario objects for same room
+        const scenarioMap: Record<string, { roomId: string, scenarioKey: string, launch?: BrainRecipe, poweroff?: BrainRecipe }> = {};
+        
+        for (const recipe of model.recipes) {
+            if (!recipe.scenarioKey) continue;
+            const key = `${recipe.roomId}|${recipe.scenarioKey}`;
+            if (!scenarioMap[key]) {
+                scenarioMap[key] = { roomId: recipe.roomId, scenarioKey: recipe.scenarioKey };
+            }
+            if (recipe.type === 'launch') scenarioMap[key].launch = recipe;
+            if (recipe.type === 'poweroff') scenarioMap[key].poweroff = recipe;
+        }
+
+        for (const { roomId, scenarioKey, launch, poweroff } of Object.values(scenarioMap)) {
+            if (!launch || !poweroff) continue;
+
+            // Use launch.name or fallback to scenarioKey
+            const scenarioName = scenarioKey;
+            const scenFolder = `${ROOMS}.${roomId}.${SCENARIOS}.${scenarioName}`;
+
+            await this.setObjectNotExistsAsync(scenFolder, {
+                type: "channel",
+                common: { name: launch.name?.replace(/\s*-\s*launch$/i, '') || `Scenario ${scenarioKey}` },
+                native: {
+                    launchId: launch.id,
+                    poweroffId: poweroff.id,
+                    scenarioKey,
+                    roomKey: roomId
+                }
+            });
+
+            // Create object lanchId
+            await this.setObjectNotExistsAsync(`${scenFolder}.launch`, {
+                type: "state",
+                common: { name: "Recipe ID launch", type: "string", role: "info.id", read: true, write: false },
+                native: {}
+            });
+
+            await this.setState(`${scenFolder}.launch`, launch.id, true);
+
+            // Create object poweroffId
+            await this.setObjectNotExistsAsync(`${scenFolder}.poweroff`, {
+                type: "state",
+                common: { name: "Recipe ID poweroff", type: "string", role: "info.id", read: true, write: false },
+                native: {}
+            });
+
+            await this.setState(`${scenFolder}.poweroff`, poweroff.id, true);
+
+            // Create object isactive
+            await this.setObjectNotExistsAsync(`${scenFolder}.${ISACTIVE}`, {
+                type: "state",
+                common: {
+                    name: "Scenario Status",
+                    type: "boolean",
+                    role: "indicator.status",
+                    read: true,
+                    write: false
+                },
+                native: {
+                    roomKey: roomId,
+                    recipeKey: launch.id,
+                    scenarioKey: scenarioName
+                }
+            });
+
+            // Create object powerToggle
+            await this.setObjectNotExistsAsync(`${scenFolder}.powerToggle`, {
+                type: "state",
+                common: {
+                    name: "Power Toggle Scenario",
+                    type: "boolean",
+                    role: "button",
+                    read: false,
+                    write: true
+                },
+                native: {
+                    roomKey: roomId,
+                    launch: launch.id,
+                    poweroff: poweroff.id,
+                    scenarioKey: scenarioName
+                }
+            });
+
+            if (this.debugMode) this.log.debug(`Created scenario group: ${scenFolder}`);
         }
 
         // Start polling
@@ -303,22 +463,152 @@ class NeeoAdapter extends Adapter {
         const obj = await this.getObjectAsync(id);
         const native = obj?.native || {};
 
-        // Handle recipe execution
-        if (id.endsWith(`.${EXECUTE}`) && native.roomKey && native.recipeKey) {
-            await this.executeRecipe(native.roomKey, native.recipeKey);
+        // Execute recipes
+        if (id.endsWith(`.${EXECUTE}`)) {
+            const recipeChannelId = id.replace(`.${EXECUTE}`, "");
+            const recipeObj = await this.getObjectAsync(recipeChannelId);
+            const recNative = recipeObj?.native;
+            if (!recNative?.roomId || !recNative?.id) return;
+
+            try {
+                // Execute recipe
+                await this.executeRecipe(recNative.roomId, recNative.id);
+
+                // Change isactive state (recipe / scenario / room)
+                const isLaunch = recNative.type === "launch";
+                const roomPath = `${ROOMS}.${recNative.roomId}`;
+                const recipePath = `${roomPath}.${RECIPES}.${recNative.id}.${ISACTIVE}`;
+
+                await this.setState(recipePath, isLaunch, true);
+                if (recNative.scenarioKey) {
+                    const scenarioPath = `${roomPath}.${SCENARIOS}.${recNative.scenarioKey}.${ISACTIVE}`;
+                    await this.setState(scenarioPath, isLaunch, true);
+                }
+                await this.setState(`${roomPath}.isactive`, isLaunch, true);
+
+            } catch (err: any) {
+                this.log.error(`Recipe execution failed: ${err.message}`);
+            }
             return;
         }
 
-        // Handle macro trigger
-        if (id.includes(`.${MACROS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
-            await this.triggerMacro(native.roomKey, native.deviceKey, native.macroKey);
+        // Trigger macro / commands
+        if ((id.includes(`.${MACROS}.`) || id.includes(`.${COMMANDS}.`)) && native.roomKey && native.deviceKey && native.macroKey) {
+            try {
+                await this.triggerMacro(native.roomKey, native.deviceKey, native.macroKey);
+
+            } catch (err: any) {
+                this.log.error(`Macro/command trigger failed: ${err.message}`);
+            }
             return;
         }
 
-        // Handle generic command trigger
-        if (id.includes(`.${COMMANDS}.`) && native.roomKey && native.deviceKey && native.macroKey) {
-            await this.triggerMacro(native.roomKey, native.deviceKey, native.macroKey);
+        // Scenario power toggle
+        if (id.endsWith(".powerToggle") && id.includes(`.${SCENARIOS}.`)) {
+            const scenId = id.replace(".powerToggle", "");
+            const scenObj = await this.getObjectAsync(scenId);
+            const { roomKey, launchId, poweroffId, scenarioKey } = scenObj?.native || {};
+            if (!roomKey || !launchId || !poweroffId || !scenarioKey) return;
+
+            const isActivePath = `${ROOMS}.${roomKey}.${SCENARIOS}.${scenarioKey}.${ISACTIVE}`;
+            const isCurrentlyActive = (await this.getStateAsync(isActivePath))?.val === true;
+            const isLaunching = !isCurrentlyActive;
+            const targetRecipe = isLaunching ? launchId : poweroffId;
+
+            try {
+                // Execute recipe
+                await this.executeRecipe(roomKey, targetRecipe);
+                
+                // Change isactive state (recipe / scenario / room)
+                const recipeStatePath = `${ROOMS}.${roomKey}.${RECIPES}.${targetRecipe}.${ISACTIVE}`;
+                await this.setState(recipeStatePath, isLaunching, true);
+                await this.setState(isActivePath, isLaunching, true);
+                await this.setState(`${ROOMS}.${roomKey}.isactive`, isLaunching, true);
+
+            } catch (err: any) {
+                this.log.error(`Scenario toggle failed: ${err.message}`);
+            }
             return;
+        }
+
+        // Room power toggle
+        if (id.endsWith(".powerToggle") && id.includes(`.${ROOMS}.`) && !id.includes(`.${SCENARIOS}.`)) {
+            const roomId = id.split(".")[3];
+            const roomPath = `${ROOMS}.${roomId}`;
+            const isActive = (await this.getStateAsync(`${roomPath}.isactive`))?.val === true;
+
+            if (isActive) {
+                
+                // Power off via active scenario
+                const scenarioPrefix = `${this.namespace}.${ROOMS}.${roomId}.${SCENARIOS}.`;
+                const allObjects = await this.getObjectViewAsync('system', 'channel', {
+                    startkey: scenarioPrefix,
+                    endkey: scenarioPrefix + '\u9999',
+                });
+
+                const scenarios = Object.values(allObjects.rows.map(r => r.value));
+
+                for (const s of scenarios) {
+                    const isActiveState = await this.getStateAsync(`${s._id}.${ISACTIVE}`);
+                    if (isActiveState?.val === true) {
+                        const poweroffId = s.native?.poweroffId;
+                        
+                        if (!poweroffId) {
+                            this.log.warn(`Scenario ${s._id} missing poweroffId`);
+                            continue;
+                        }
+
+                        try {
+                            // Execute recipe
+                            await this.executeRecipe(roomId, poweroffId);
+
+                            // Change isactive state (recipe / scenario / room)
+                            await this.setState(`${roomPath}.${RECIPES}.${poweroffId}.${ISACTIVE}`, false, true);
+                            await this.setState(`${s._id}.${ISACTIVE}`, false, true);
+                            await this.setState(`${roomPath}.isactive`, false, true);
+
+                        } catch (err: any) {
+                            this.log.error(`Room powerToggle (off) failed: ${err.message}`);
+                        }
+                        return;
+                    }
+                }
+                this.log.warn(`Room ${roomId} has no active scenario to power off`);
+                return;
+
+            } else {
+
+                // Power on via roomDefault
+                const customPath = `${CUSTOM_PATH}.${this.instance}.${roomId}`;
+                const defaultId = (await this.getForeignStateAsync(`${customPath}.roomDefault`))?.val?.toString();
+                const delay = Number((await this.getForeignStateAsync(`${customPath}.roomDelay`))?.val ?? 0) * 1000;
+
+                if (!defaultId) {
+                    this.log.warn(`No default recipe configured for room ${roomId}`);
+                    return;
+                }
+
+                const exec = async () => {
+                    try {
+                        // Execute recipe
+                        await this.executeRecipe(roomId, defaultId);
+                        
+                        // Change isactive state (recipe / scenario / room)
+                        await this.setState(`${roomPath}.${RECIPES}.${defaultId}.${ISACTIVE}`, true, true);
+                        const recipeObj = await this.getObjectAsync(`${roomPath}.${RECIPES}.${defaultId}`);
+                        const { scenarioKey, type } = recipeObj?.native || {};
+                        if (scenarioKey && type === "launch") {
+                            await this.setState(`${roomPath}.${SCENARIOS}.${scenarioKey}.${ISACTIVE}`, true, true);
+                        }
+                        await this.setState(`${roomPath}.isactive`, true, true);
+                    } catch (err: any) {
+                        this.log.error(`Room powerToggle (on) failed: ${err.message}`);
+                    }
+                };
+
+                delay > 0 ? setTimeout(exec, delay) : await exec();
+                return;
+            }
         }
 
         this.log.warn(`Unhandled state change: ${id}`);
@@ -355,27 +645,42 @@ class NeeoAdapter extends Adapter {
 
         this.pollHandle = setInterval(async () => {
             const timestamp = new Date().toISOString();
-            this.log.debug(`Polling recipes at ${timestamp}`);
+            if (this.debugMode) this.log.debug(`Polling recipes at ${timestamp}`);
 
             const brainReachable = await this.testBrainOnline();
-
             if (!brainReachable) return;
+
+            const roomActiveMap: Record<string, boolean> = {};
 
             for (const recipe of recipes) {
                 const id = `${ROOMS}.${recipe.roomId}.${RECIPES}.${recipe.id}.${ISACTIVE}`;
                 const url = `http://${this.brainIp}:${this.brainPort}/${API_BASE_URL}/${ROOMS}/${recipe.roomId}/${RECIPES}/${recipe.id}/${ISACTIVE}`;
+
                 try {
                     const res = await axios.get(url);
                     const active = res.data?.active ?? false;
-                    await this.setState(id, active, true);
+                    this.setState(id, active, true);
 
-                    if (DEBUG_ENABLED) {
-                        this.log.debug(`Polled recipe "${recipe.name}" [${recipe.id}] in room "${recipe.roomId}": active = ${active}`);
+                    if (!roomActiveMap[recipe.roomId]) {
+                        roomActiveMap[recipe.roomId] = active;
+                    } else {
+                        roomActiveMap[recipe.roomId] ||= active;
                     }
+
+                    if (recipe.type === "launch" && recipe.scenarioKey) {
+                        const scenId = `${ROOMS}.${recipe.roomId}.${SCENARIOS}.${recipe.scenarioKey}.${ISACTIVE}`;
+                        this.setState(scenId, active, true);
+                    }
+
+                    if (this.debugMode) this.log.debug(`Polled recipe "${recipe.name}" [${recipe.id}] in room "${recipe.roomId}": active = ${active}`);
 
                 } catch (err: any) {
                     this.log.warn(`Polling failed for recipe ${recipe.name}: ${err.message}`);
                 }
+            }
+
+            for (const roomId in roomActiveMap) {
+                this.setState(`${ROOMS}.${roomId}.isactive`, roomActiveMap[roomId], true);
             }
         }, intervalMs);
     }
@@ -404,9 +709,13 @@ class NeeoAdapter extends Adapter {
             deleted++;
         }
 
-        if (DEBUG_ENABLED) this.log.debug(`Deleted ${deleted} existing objects`);
+        this.log.debug(`Deleted ${deleted} existing objects`);
     }
 
+    // Sleep function
+    private sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     // Shutdown adapter
     private onUnload(callback: () => void): void {

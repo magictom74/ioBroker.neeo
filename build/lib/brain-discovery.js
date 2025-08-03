@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchNeeoBrainModel = fetchNeeoBrainModel;
 const axios_1 = __importDefault(require("axios"));
 const bonjour_1 = __importDefault(require("bonjour"));
+const config_1 = require("./config");
+// Brain discovery
 async function discoverNeeoBrain() {
     return new Promise((resolve) => {
         const browser = (0, bonjour_1.default)().find({ type: "neeo" }, (service) => {
@@ -16,23 +18,23 @@ async function discoverNeeoBrain() {
                 resolve({ ip, port });
             }
         });
-        // Timeout if nothing is found
         setTimeout(() => {
             browser.stop();
             resolve(null);
         }, 5000);
     });
 }
+// Brain connection and API request
 async function fetchNeeoBrainModel(adapter) {
     const config = adapter.config;
-    let ip = config.serverIp;
-    let port = config.serverPort;
+    let ip = config.brainIp?.trim();
+    let port = config.brainPort?.toString().trim();
     if (!ip || !port) {
         adapter.log.info("No IP or Port configured, trying discovery...");
         const result = await discoverNeeoBrain();
         if (result) {
             ip = result.ip;
-            port = result.port;
+            port = String(result.port);
             adapter.log.info(`Discovered NEEO Brain at ${ip}:${port}`);
         }
         else {
@@ -40,47 +42,109 @@ async function fetchNeeoBrainModel(adapter) {
             return null;
         }
     }
-    const url = `http://${ip}:${port}/v1/projects/home`;
+    const baseUrl = `http://${ip}:${port}/${config_1.API_BASE_URL}`;
+    if (adapter.config.debugMode)
+        adapter.log.debug(`Fetching Brain model from ${baseUrl}`);
     try {
-        adapter.log.debug(`Fetching Brain model from ${url}`);
-        const response = await axios_1.default.get(url);
+        const response = await axios_1.default.get(baseUrl);
         const data = response.data;
         const rooms = [];
-        const recipes = [];
         const devices = [];
-        for (const room of data.rooms || []) {
-            rooms.push({
-                id: room.name.toLowerCase().replace(/\s+/g, "_"),
-                name: room.name,
-                recipes: [],
+        const recipes = [];
+        const scenarios = [];
+        // Rooms
+        for (const roomKey of Object.keys(data.rooms || {})) {
+            const roomData = data.rooms[roomKey];
+            if (!roomData || typeof roomData !== "object")
+                continue;
+            const roomId = roomData.key;
+            const hasDevices = roomData.devices && Object.keys(roomData.devices).length > 0;
+            const hasRecipes = roomData.recipes && Object.keys(roomData.recipes).length > 0;
+            const hasScenarios = roomData.scenarios && Object.keys(roomData.scenarios).length > 0;
+            // Check if room has content
+            if (!hasDevices && !hasRecipes && !hasScenarios) {
+                if (adapter.config.debugMode)
+                    adapter.log.debug(`Skipping room ${roomData.name} (${roomId}) - empty content`);
+                continue;
+            }
+            const room = {
+                id: roomId,
+                name: roomData.name,
                 devices: [],
-            });
-            for (const recipe of room.recipes || []) {
-                recipes.push({
-                    id: recipe.recipeId,
-                    name: recipe.name,
-                    type: recipe.type,
-                    power: recipe.powerKey,
-                    deviceClass: recipe.deviceClass,
-                    roomName: room.name,
-                    deviceName: recipe.deviceName,
-                    isTurnedOn: recipe.enabled || false
-                });
+                recipes: [],
+                scenarios: []
+            };
+            // Devices
+            if (hasDevices) {
+                for (const devKey of Object.keys(roomData.devices)) {
+                    const device = roomData.devices[devKey];
+                    const localMacros = Object.values(device.macros || {}).map((macro) => ({
+                        id: macro.key,
+                        name: macro.name,
+                        label: macro.label
+                    }));
+                    const globalCommands = Object.values(data.buttons || {})
+                        .filter((btn) => btn.deviceKey === device.key)
+                        .map((btn) => ({ id: btn.key, name: btn.name, label: btn.label }));
+                    const brainDevice = {
+                        id: device.key,
+                        name: device.name,
+                        type: device.type ?? "",
+                        roomId,
+                        capabilities: {
+                            buttons: device.buttons ? Object.keys(device.buttons) : [],
+                            sliders: device.sliders ? Object.keys(device.sliders) : []
+                        },
+                        macros: localMacros,
+                        genericMacros: globalCommands,
+                        details: device.details ?? {}
+                    };
+                    room.devices.push(brainDevice);
+                    devices.push(brainDevice);
+                }
             }
-            for (const device of room.devices || []) {
-                devices.push({
-                    id: device.uniqueDeviceId,
-                    name: device.name,
-                    type: device.type,
-                    roomName: room.name,
-                    capabilities: {
-                        buttons: device.buttons || [],
-                        sliders: device.sliders || []
-                    }
-                });
+            // Recipes
+            if (hasRecipes) {
+                for (const recKey of Object.keys(roomData.recipes)) {
+                    const recipe = roomData.recipes[recKey];
+                    const brainRecipe = {
+                        id: recipe.key,
+                        name: `${recipe.name} - ${recipe.type}`,
+                        type: recipe.type,
+                        roomId,
+                        deviceName: recipe.deviceName ?? "",
+                        deviceClass: recipe.mainDeviceType ?? "",
+                        power: recipe.steps?.find((s) => s.componentName)?.componentName ?? "",
+                        isTurnedOn: recipe.enabled ?? false,
+                        scenarioKey: recipe.scenarioKey ?? undefined
+                    };
+                    room.recipes.push(brainRecipe);
+                    recipes.push(brainRecipe);
+                }
             }
+            // Scenarios
+            if (hasScenarios) {
+                for (const scnKey of Object.keys(roomData.scenarios)) {
+                    const scenario = roomData.scenarios[scnKey];
+                    const brainScenario = {
+                        id: scenario.key,
+                        name: scenario.name,
+                        type: scenario.type
+                    };
+                    room.scenarios.push(brainScenario);
+                    scenarios.push(brainScenario);
+                }
+            }
+            rooms.push(room);
         }
-        return { rooms, devices, recipes };
+        return {
+            rooms,
+            devices,
+            recipes,
+            scenarios,
+            brainIp: ip,
+            brainPort: Number(port)
+        };
     }
     catch (error) {
         const err = error;

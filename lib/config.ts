@@ -1,4 +1,3 @@
-export const DEBUG_ENABLED = false;
 export const API_BASE_URL = 'v1/projects/home';
 export const ROOMS = 'rooms';
 export const INFO = 'info';
@@ -10,4 +9,6 @@ export const COMMANDS = 'commands';
 export const ISACTIVE = 'isactive';
 export const EXECUTE = 'execute';
 export const TRIGGER = 'trigger';
-export const POLL_INTERVAL = 15;
+export const POLL_INTERVAL = 60;
+export const CUSTOM_PATH = '0_userdata.0.neeo';
+
