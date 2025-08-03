@@ -1,129 +1,142 @@
 {
+  "adminUI": {
+    "config": "json5"
+  },
+  "common": {
+    "name": "neeo",
+    "version": "1.0.2",
+    "news": {
+      "1.0.2": {
+        "en": "Debug mode improved",
+        "de": "Debug-Modus verbessert",
+        "ru": "Улучшен режим Debug",
+        "pt": "Modo de depuração melhorado",
+        "nl": "Debugmodus verbeterd",
+        "fr": "Mode de débogage amélioré",
+        "it": "Modalità di debito migliorata",
+        "es": "Modo de depuración mejorado",
+        "pl": "Poprawiono tryb debugowania",
+        "uk": "Покращений режим Debug",
+        "zh-cn": "调试模式得到改进"
+      },
+      "1.0.1": {
+        "en": "Scenario and custom state per room added",
+        "de": "Szenario und Custom Status pro Raum hinzugefügt",
+        "es": "Escenario y estado personalizado por habitación añadidos",
+        "fr": "Scénario et état personnalisé par pièce ajoutés",
+        "it": "Aggiunti scenario e stato personalizzato per stanza",
+        "nl": "Scenario en aangepaste status per kamer toegevoegd",
+        "pl": "Dodano scenariusz i niestandardowy stan dla każdego pokoju",
+        "pt": "Cenário e estado personalizado por sala adicionados",
+        "ru": "Добавлены сценарии и пользовательские состояния для каждой комнаты",
+        "uk": "Додано сценарії та власні стани для кожної кімнати",
+        "zh-cn": "添加了每个房间的场景和自定义状态"
+      },
+      "1.0.0": {
+        "en": "Initial release",
+        "de": "Erstveröffentlichung",
+        "es": "Versión inicial",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "nl": "Eerste uitgave",
+        "pl": "Pierwsze wydanie",
+        "pt": "Lançamento inicial",
+        "ru": "Первый выпуск",
+        "uk": "Початковий реліз",
+        "zh-cn": "初始版本"
+      }
+    },
+    "titleLang": {
+      "en": "NEEO Remote Control",
+      "de": "NEEO Fernbedienung",
+      "es": "NEEO Remote Control",
+      "fr": "NEEO Remote Control",
+      "it": "NEEO Remote Control",
+      "nl": "NEEO Remote Control",
+      "pl": "NEEO Remote Control",
+      "pt": "NEEO Remote Control",
+      "ru": "NEEO Remote Control",
+      "uk": "NEEO Remote Control",
+      "zh-cn": "NEEO Remote Control"
+    },
+    "desc": {
+      "en": "ioBroker Adapter for NEEO Remote Control",
+      "de": "ioBroker Adapter für die NEEO-Fernbedienung",
+      "es": "Adaptador de ioBroker para NEEO Remote Control",
+      "fr": "Adaptateur ioBroker pour NEEO Remote Control",
+      "it": "Adattatore ioBroker per NEEO Remote Control",
+      "nl": "ioBroker-adapter voor NEEO Remote Control",
+      "pl": "Adapter ioBroker dla NEEO Remote Control",
+      "pt": "Adaptador ioBroker para NEEO Remote Control",
+      "ru": "Адаптер ioBroker для NEEO Remote Control",
+      "uk": "Адаптер ioBroker для NEEO Remote Control",
+      "zh-cn": "适用于 NEEO Remote Control 的 ioBroker 适配器"
+    },
+    "authors": [
+      "tom <teuber@magictom.ch>"
+    ],
+    "keywords": [
+      "neeo",
+      "remote control"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "neeo.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/magictom74/ioBroker.neeo/main/admin/neeo.png",
+    "readme": "https://github.com/magictom74/ioBroker.neeo/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "multimedia",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
     "adminUI": {
-        "config": "json5"
+      "config": "json"
     },
-    "common": {
-        "name": "neeo",
-        "version": "1.0.1",
-        "news": {
-            "1.0.1": {
-                "en": "Scenario and custom state per room added",
-                "de": "Szenario und Custom Status pro Raum hinzugefügt",
-                "es": "Escenario y estado personalizado por habitación añadidos",
-                "fr": "Scénario et état personnalisé par pièce ajoutés",
-                "it": "Aggiunti scenario e stato personalizzato per stanza",
-                "nl": "Scenario en aangepaste status per kamer toegevoegd",
-                "pl": "Dodano scenariusz i niestandardowy stan dla każdego pokoju",
-                "pt": "Cenário e estado personalizado por sala adicionados",
-                "ru": "Добавлены сценарии и пользовательские состояния для каждой комнаты",
-                "uk": "Додано сценарії та власні стани для кожної кімнати",
-                "zh-cn": "添加了每个房间的场景和自定义状态"
-            },
-            "1.0.0": {
-                "en": "Initial release",
-                "de": "Erstveröffentlichung",
-                "es": "Versión inicial",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "nl": "Eerste uitgave",
-                "pl": "Pierwsze wydanie",
-                "pt": "Lançamento inicial",
-                "ru": "Первый выпуск",
-                "uk": "Початковий реліз",
-                "zh-cn": "初始版本"
-            }
-        },
-                "titleLang": {
-            "en": "NEEO Remote Control",
-            "de": "NEEO Fernbedienung",
-            "es": "NEEO Remote Control",
-            "fr": "NEEO Remote Control",
-            "it": "NEEO Remote Control",
-            "nl": "NEEO Remote Control",
-            "pl": "NEEO Remote Control",
-            "pt": "NEEO Remote Control",
-            "ru": "NEEO Remote Control",
-            "uk": "NEEO Remote Control",
-            "zh-cn": "NEEO Remote Control"
-        },
-        "desc": {
-            "en": "ioBroker Adapter for NEEO Remote Control",
-            "de": "ioBroker Adapter für die NEEO-Fernbedienung",
-            "es": "Adaptador de ioBroker para NEEO Remote Control",
-            "fr": "Adaptateur ioBroker pour NEEO Remote Control",
-            "it": "Adattatore ioBroker per NEEO Remote Control",
-            "nl": "ioBroker-adapter voor NEEO Remote Control",
-            "pl": "Adapter ioBroker dla NEEO Remote Control",
-            "pt": "Adaptador ioBroker para NEEO Remote Control",
-            "ru": "Адаптер ioBroker для NEEO Remote Control",
-            "uk": "Адаптер ioBroker для NEEO Remote Control",
-            "zh-cn": "适用于 NEEO Remote Control 的 ioBroker 适配器"
-        },
-        "authors": [
-            "tom <teuber@magictom.ch>"
-        ],
-        "keywords": [
-            "neeo",
-            "remote control"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "neeo.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/magictom74/ioBroker.neeo/main/admin/neeo.png",
-        "readme": "https://github.com/magictom74/ioBroker.neeo/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "multimedia",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.4.10"
-            }
-        ]
-    },
-    "native": {
-        "brainIp": "",
-        "brainPort": 3000,
-        "pollInterval": 60,
-        "debugMode": false
-    },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.4.10"
+      }
     ]
+  },
+  "native": {
+    "brainIp": "",
+    "brainPort": 3000,
+    "pollInterval": 60,
+    "debugMode": false
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }

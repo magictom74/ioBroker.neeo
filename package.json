@@ -1,6 +1,6 @@
 {
   "name": "iobroker.neeo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ioBroker Adapter for NEEO Remote Control",
   "author": {
     "name": "tom",
@@ -8,7 +8,10 @@
   },
   "homepage": "https://github.com/magictom74/ioBroker.neeo",
   "license": "MIT",
-  "keywords": ["neeo", "ioBroker"],
+  "keywords": [
+    "neeo",
+    "ioBroker"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/magictom74/ioBroker.neeo"
