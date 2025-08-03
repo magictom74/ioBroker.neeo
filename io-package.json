@@ -4,8 +4,21 @@
   },
   "common": {
     "name": "neeo",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "Szenario und Custom Status pro Raum hinzugefügt",
+        "de": "Szenario und Custom Status pro Raum hinzugefügt",
+        "ru": "Szenario und Custom Status pro Raum hinzugefügt",
+        "pt": "Szenario und Custom Status pro Raum hinzugefügt",
+        "nl": "Szenario und Custom Status pro Raum hinzugefügt",
+        "fr": "Szenario und Custom Status pro Raum hinzugefügt",
+        "it": "Szenario und Custom Status pro Raum hinzugefügt",
+        "es": "Szenario und Custom Status pro Raum hinzugefügt",
+        "pl": "Szenario und Custom Status pro Raum hinzugefügt",
+        "uk": "Szenario und Custom Статус pro Raum hinzugefügt",
+        "zh-cn": "Szenario und 自定义状态"
+      },
       "1.0.0": {
         "en": "Initial release",
         "de": "Erstveröffentlichung",
