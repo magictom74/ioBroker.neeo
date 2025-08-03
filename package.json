@@ -10,14 +10,14 @@
   "license": "MIT",
   "keywords": [
     "neeo",
-    "iobroker"
+    "ioBroker"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/magictom74/ioBroker.neeo"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
