@@ -4,7 +4,7 @@
     },
     "common": {
         "name": "neeo",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
             "1.0.1": {
                 "en": "Scenario and custom state per room added",
@@ -64,7 +64,7 @@
         ],
         "keywords": [
             "neeo",
-            "ioBroker"
+            "remote control"
         ],
         "licenseInformation": {
             "type": "free",

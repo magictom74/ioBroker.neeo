@@ -9,6 +9,7 @@ class NeeoAdapter extends Adapter {
     private brainPort: number = 0;
     private pollInterval: number = POLL_INTERVAL;
     private pollHandle: NodeJS.Timeout | null = null;
+    private roomPowerTimeout: NodeJS.Timeout | null = null;
     private debugMode: boolean = false;
     
     constructor(options: Partial<AdapterOptions> = {}) {
@@ -606,7 +607,11 @@ class NeeoAdapter extends Adapter {
                     }
                 };
 
-                delay > 0 ? setTimeout(exec, delay) : await exec();
+                if (delay > 0) {
+                    this.roomPowerTimeout = setTimeout(exec, delay);
+                } else {
+                    await exec();
+                }
                 return;
             }
         }
@@ -717,6 +722,7 @@ class NeeoAdapter extends Adapter {
         try {
             this.log.info("Adapter is shutting down...");
             if (this.pollHandle) clearInterval(this.pollHandle);
+            if (this.roomPowerTimeout) clearTimeout(this.roomPowerTimeout);
             callback();
         } catch {
             callback();
