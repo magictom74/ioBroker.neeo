@@ -43,7 +43,7 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-### 1.0.1 (2025-08-04)
+### **WORK IN PROGRESS**
 * Szenario und Custom Status pro Raum hinzugefügt
 
 ### 1.0.0
