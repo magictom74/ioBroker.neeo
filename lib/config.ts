@@ -10,5 +10,5 @@ export const ISACTIVE = 'isactive';
 export const EXECUTE = 'execute';
 export const TRIGGER = 'trigger';
 export const POLL_INTERVAL = 60;
+export const POLL_THRESHOLD  = 15;
 export const CUSTOM_PATH = '0_userdata.0.neeo';
-

@@ -1,7 +1,4 @@
 {
-  "adminUI": {
-    "config": "json5"
-  },
   "common": {
     "name": "neeo",
     "version": "1.0.1",
@@ -83,7 +80,7 @@
     "connectionType": "local",
     "dataSource": "poll",
     "adminUI": {
-      "config": "json"
+      "config": "json5"
     },
     "dependencies": [
       {
@@ -99,8 +96,7 @@
   "native": {
     "brainIp": "",
     "brainPort": 3000,
-    "pollInterval": 60,
-    "debugMode": false
+    "pollInterval": 60
   },
   "objects": [],
   "instanceObjects": [
@@ -117,7 +113,19 @@
       "type": "state",
       "common": {
         "role": "indicator.connected",
-        "name": "Device or service connected",
+        "name": {
+            "en": "NEEO Brain connected",
+            "de": "NEEO Bremsanschluss",
+            "ru": "NEEO Мозг подключен",
+            "pt": "NEEO Cérebro conectado",
+            "nl": "NEEO Hersenen verbonden",
+            "fr": "NEEO Cerveau connecté",
+            "it": "NEEO Braccio collegato",
+            "es": "NEEO Cerebro conectado",
+            "pl": "NEEO Połączony mózg",
+            "uk": "NEEO Брайн підключений",
+            "zh-cn": "国家 大脑连接"
+        },
         "type": "boolean",
         "read": true,
         "write": false,

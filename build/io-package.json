@@ -1,11 +1,21 @@
 {
-    "adminUI": {
-        "config": "json5"
-    },
     "common": {
         "name": "neeo",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
+            "1.0.1": {
+                "en": "Szenario und Custom Status pro Raum hinzugefügt",
+                "de": "Szenario und Custom Status pro Raum hinzugefügt",
+                "ru": "Szenario und Custom Status pro Raum hinzugefügt",
+                "pt": "Szenario und Custom Status pro Raum hinzugefügt",
+                "nl": "Szenario und Custom Status pro Raum hinzugefügt",
+                "fr": "Szenario und Custom Status pro Raum hinzugefügt",
+                "it": "Szenario und Custom Status pro Raum hinzugefügt",
+                "es": "Szenario und Custom Status pro Raum hinzugefügt",
+                "pl": "Szenario und Custom Status pro Raum hinzugefügt",
+                "uk": "Szenario und Custom Статус pro Raum hinzugefügt",
+                "zh-cn": "Szenario und 自定义状态"
+            },
             "1.0.0": {
                 "en": "Initial release",
                 "de": "Erstveröffentlichung",
@@ -70,7 +80,7 @@
         "connectionType": "local",
         "dataSource": "poll",
         "adminUI": {
-            "config": "json"
+            "config": "json5"
         },
         "dependencies": [
             {
@@ -86,8 +96,7 @@
     "native": {
         "brainIp": "",
         "brainPort": 3000,
-        "pollInterval": 60,
-        "debugMode": false
+        "pollInterval": 60
     },
     "objects": [],
     "instanceObjects": [
@@ -104,7 +113,19 @@
             "type": "state",
             "common": {
                 "role": "indicator.connected",
-                "name": "Device or service connected",
+                "name": {
+                    "en": "NEEO Brain connected",
+                    "de": "NEEO Bremsanschluss",
+                    "ru": "NEEO Мозг подключен",
+                    "pt": "NEEO Cérebro conectado",
+                    "nl": "NEEO Hersenen verbonden",
+                    "fr": "NEEO Cerveau connecté",
+                    "it": "NEEO Braccio collegato",
+                    "es": "NEEO Cerebro conectado",
+                    "pl": "NEEO Połączony mózg",
+                    "uk": "NEEO Брайн підключений",
+                    "zh-cn": "国家 大脑连接"
+                },
                 "type": "boolean",
                 "read": true,
                 "write": false,
