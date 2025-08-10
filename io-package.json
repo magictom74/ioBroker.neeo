@@ -1,34 +1,8 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.3",
+    "version": "1.0.1",
     "news": {
-      "1.0.3": {
-        "en": "Rebublish wegen npm issue",
-        "de": "Rebublish wegen npm Problem",
-        "ru": "Издательство: Wegen npm Issue",
-        "pt": "Rebublish wegen npm",
-        "nl": "Rebublish wegen npm probleem",
-        "fr": "Résoudre l'émission wegen npm",
-        "it": "Rebublish wegen npm problema",
-        "es": "Recuperar la emisión de wegen npm",
-        "pl": "Rebublish wegen npm issue",
-        "uk": "Реабультифікований випуск пpm",
-        "zh-cn": "重写 Wegen npm 问题"
-      },
-      "1.0.2": {
-        "en": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "de": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "ru": "Глобальный Power Toogle und Volume Makros Pro Раум Хинзугефюгт,",
-        "pt": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "nl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "fr": "Globaler Power Toogle und Volume Makros pro Raum Hinzugefügt,",
-        "it": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "es": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "pl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
-        "uk": "Глобальна потужність Toogle und Volume Makros pro Raum hinzugefügt,",
-        "zh-cn": "Global Power Toogle und Volume Makros pro (全球电源) 电源 电源 劳姆·欣祖格夫特,"
-      },
       "1.0.1": {
         "en": "Szenario und Custom Status pro Raum hinzugefügt",
         "de": "Szenario und Custom Status pro Raum hinzugefügt",
