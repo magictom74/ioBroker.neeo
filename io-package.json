@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "news": {
+      "1.0.2": {
+        "en": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "de": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "ru": "Глобальный Power Toogle und Volume Makros Pro Раум Хинзугефюгт",
+        "pt": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "nl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "fr": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "it": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "es": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "pl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt",
+        "uk": "Глобальна потужність Toogle und Volume Makros pro Raum hinzugefügt",
+        "zh-cn": "Global Power Toogle und Volume Makros pro (全球电源) 电源 电源 劳姆·欣祖格夫特"
+      },
       "1.0.1": {
         "en": "Szenario und Custom Status pro Raum hinzugefügt",
         "de": "Szenario und Custom Status pro Raum hinzugefügt",
@@ -114,17 +127,17 @@
       "common": {
         "role": "indicator.connected",
         "name": {
-            "en": "NEEO Brain connected",
-            "de": "NEEO Bremsanschluss",
-            "ru": "NEEO Мозг подключен",
-            "pt": "NEEO Cérebro conectado",
-            "nl": "NEEO Hersenen verbonden",
-            "fr": "NEEO Cerveau connecté",
-            "it": "NEEO Braccio collegato",
-            "es": "NEEO Cerebro conectado",
-            "pl": "NEEO Połączony mózg",
-            "uk": "NEEO Брайн підключений",
-            "zh-cn": "国家 大脑连接"
+          "en": "NEEO Brain connected",
+          "de": "NEEO Bremsanschluss",
+          "ru": "NEEO Мозг подключен",
+          "pt": "NEEO Cérebro conectado",
+          "nl": "NEEO Hersenen verbonden",
+          "fr": "NEEO Cerveau connecté",
+          "it": "NEEO Braccio collegato",
+          "es": "NEEO Cerebro conectado",
+          "pl": "NEEO Połączony mózg",
+          "uk": "NEEO Брайн підключений",
+          "zh-cn": "国家 大脑连接"
         },
         "type": "boolean",
         "read": true,

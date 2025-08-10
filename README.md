@@ -49,9 +49,8 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-
-### **WORK IN PROGRESS**
-* Globaler Power Toogle und Volume Makros pro Raum hinzugefügt 
+### 1.0.2 (2025-08-10)
+* Globaler Power Toogle und Volume Makros pro Raum hinzugefügt
 
 ### 1.0.1 (2025-08-04)
 * Szenario und Custom Status pro Raum hinzugefügt
