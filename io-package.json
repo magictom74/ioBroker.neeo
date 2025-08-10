@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
+      "1.0.3": {
+        "en": "Rebublish wegen npm issue",
+        "de": "Rebublish wegen npm Problem",
+        "ru": "Издательство: Wegen npm Issue",
+        "pt": "Rebublish wegen npm",
+        "nl": "Rebublish wegen npm probleem",
+        "fr": "Résoudre l'émission wegen npm",
+        "it": "Rebublish wegen npm problema",
+        "es": "Recuperar la emisión de wegen npm",
+        "pl": "Rebublish wegen npm issue",
+        "uk": "Реабультифікований випуск пpm",
+        "zh-cn": "重写 Wegen npm 问题"
+      },
       "1.0.2": {
         "en": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
         "de": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",

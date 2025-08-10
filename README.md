@@ -49,8 +49,7 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 1.0.3 (2025-08-10)
 * Rebublish wegen npm issue
 
 ### 1.0.2 (2025-08-10)
