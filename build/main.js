@@ -642,7 +642,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                         try {
                             // Execute recipe
                             await this.executeRecipe(roomId, poweroffId);
-                            // Change isactive state (recipe / scenario / room)
+                            // Change state isactive=false (recipe / scenario / room)
                             await this.setState(`${roomPath}.${config_1.RECIPES}.${poweroffId}.${config_1.ISACTIVE}`, false, true);
                             await this.setState(`${s._id}.${config_1.ISACTIVE}`, false, true);
                             await this.setState(`${roomPath}.isactive`, false, true);
@@ -670,7 +670,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                     try {
                         // Execute recipe
                         await this.executeRecipe(roomId, defaultId);
-                        // Change isactive state (recipe / scenario / room)
+                        // Change state isactive=true (recipe / scenario / room)
                         await this.setState(`${roomPath}.${config_1.RECIPES}.${defaultId}.${config_1.ISACTIVE}`, true, true);
                         const recipeObj = await this.getObjectAsync(`${roomPath}.${config_1.RECIPES}.${defaultId}`);
                         const { scenarioKey, type } = recipeObj?.native || {};
@@ -678,7 +678,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                             await this.setState(`${roomPath}.${config_1.SCENARIOS}.${scenarioKey}.${config_1.ISACTIVE}`, true, true);
                         }
                         await this.setState(`${roomPath}.isactive`, true, true);
-                        await this.updateGlobalIsActive(roomId, false);
+                        await this.updateGlobalIsActive(roomId, true);
                     }
                     catch (err) {
                         this.log.error(`Room powerToggle (on) failed: ${err.message}`);
@@ -697,6 +697,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         if (id === `${this.namespace}.${config_1.INFO}.powerToggle`) {
             try {
                 const globalIsActive = (await this.getStateAsync(`${config_1.INFO}.isactive`))?.val === true;
+                this.log.debug(`--> globalIsActive = ${globalIsActive}`);
                 const allRooms = await this.getObjectViewAsync('system', 'channel', {
                     startkey: `${this.namespace}.${config_1.ROOMS}.`,
                     endkey: `${this.namespace}.${config_1.ROOMS}.\u9999`
@@ -706,7 +707,8 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                         .filter(Boolean)
                         .map(id => id.split('.'))
                         .filter(parts => parts.length === 4)
-                        .map(parts => parts[3]))];
+                        .map(parts => parts[3]))
+                ];
                 for (const roomId of roomIds) {
                     const roomPath = `${config_1.ROOMS}.${roomId}`;
                     const customPath = `${config_1.CUSTOM_PATH}.${this.instance}.${roomId}`;
@@ -778,6 +780,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
     }
     // Check and update global isactive status
     async updateGlobalIsActive(roomKey, isLaunching) {
+        this.log.debug(`--> isLaunching = ${isLaunching} `);
         if (isLaunching) {
             const cur = await this.getStateAsync(`${config_1.INFO}.isactive`);
             if (cur?.val !== true)

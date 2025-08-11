@@ -141,7 +141,7 @@
         "role": "indicator.connected",
         "name": {
           "en": "NEEO Brain connected",
-          "de": "NEEO Bremsanschluss",
+          "de": "NEEO Brain Verbindung",
           "ru": "NEEO Мозг подключен",
           "pt": "NEEO Cérebro conectado",
           "nl": "NEEO Hersenen verbonden",

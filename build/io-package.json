@@ -1,8 +1,34 @@
 {
     "common": {
         "name": "neeo",
-        "version": "1.0.1",
+        "version": "1.0.3",
         "news": {
+            "1.0.3": {
+                "en": "Update für fehlerhaftes npm package",
+                "de": "Update für npm Paket",
+                "ru": "Обновление пакета für fehlerhafts npm",
+                "pt": "Actualizar o pacote für fehlerhaftes npm",
+                "nl": "Update für fehlerhoftes npm pakket",
+                "fr": "Mettre à jour le paquet für fehlerhaftes npm",
+                "it": "Aggiornamento del pacchetto npm",
+                "es": "Actualizar el paquete für fehlerhaftes npm",
+                "pl": "Aktualizacja pakietu für fehlerhaftes npm",
+                "uk": "Update für fehlerhaftes npm пакет",
+                "zh-cn": "更新 für fehlerhaftes npm 软件包"
+            },
+            "1.0.2": {
+                "en": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "de": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "ru": "Глобальный Power Toogle und Volume Makros Pro Раум Хинзугефюгт,",
+                "pt": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "nl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "fr": "Globaler Power Toogle und Volume Makros pro Raum Hinzugefügt,",
+                "it": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "es": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "pl": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
+                "uk": "Глобальна потужність Toogle und Volume Makros pro Raum hinzugefügt,",
+                "zh-cn": "Global Power Toogle und Volume Makros pro (全球电源) 电源 电源 劳姆·欣祖格夫特,"
+            },
             "1.0.1": {
                 "en": "Szenario und Custom Status pro Raum hinzugefügt",
                 "de": "Szenario und Custom Status pro Raum hinzugefügt",
@@ -80,7 +106,7 @@
         "connectionType": "local",
         "dataSource": "poll",
         "adminUI": {
-            "config": "json5"
+            "config": "json"
         },
         "dependencies": [
             {
@@ -115,7 +141,7 @@
                 "role": "indicator.connected",
                 "name": {
                     "en": "NEEO Brain connected",
-                    "de": "NEEO Bremsanschluss",
+                    "de": "NEEO Brain Verbindung",
                     "ru": "NEEO Мозг подключен",
                     "pt": "NEEO Cérebro conectado",
                     "nl": "NEEO Hersenen verbonden",

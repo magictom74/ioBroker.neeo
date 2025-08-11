@@ -717,7 +717,7 @@ class NeeoAdapter extends Adapter {
                             // Execute recipe
                             await this.executeRecipe(roomId, poweroffId);
 
-                            // Change isactive state (recipe / scenario / room)
+                            // Change state isactive=false (recipe / scenario / room)
                             await this.setState(`${roomPath}.${RECIPES}.${poweroffId}.${ISACTIVE}`, false, true);
                             await this.setState(`${s._id}.${ISACTIVE}`, false, true);
                             await this.setState(`${roomPath}.isactive`, false, true);
@@ -749,7 +749,7 @@ class NeeoAdapter extends Adapter {
                         // Execute recipe
                         await this.executeRecipe(roomId, defaultId);
                         
-                        // Change isactive state (recipe / scenario / room)
+                        // Change state isactive=true (recipe / scenario / room)
                         await this.setState(`${roomPath}.${RECIPES}.${defaultId}.${ISACTIVE}`, true, true);
                         const recipeObj = await this.getObjectAsync(`${roomPath}.${RECIPES}.${defaultId}`);
                         const { scenarioKey, type } = recipeObj?.native || {};
@@ -757,7 +757,7 @@ class NeeoAdapter extends Adapter {
                             await this.setState(`${roomPath}.${SCENARIOS}.${scenarioKey}.${ISACTIVE}`, true, true);
                         }
                         await this.setState(`${roomPath}.isactive`, true, true);
-                        await this.updateGlobalIsActive(roomId, false);
+                        await this.updateGlobalIsActive(roomId, true);
 
                     } catch (err: any) {
                         this.log.error(`Room powerToggle (on) failed: ${err.message}`);
@@ -783,13 +783,14 @@ class NeeoAdapter extends Adapter {
                 });
 
                 const roomIds = [...new Set(
-                allRooms.rows
-                    .map(r => (r.value?._id ?? r.id) as string)
-                    .filter(Boolean)
-                    .map(id => id.split('.'))
-                    .filter(parts => parts.length === 4)
-                    .map(parts => parts[3])
-                )];
+                    allRooms.rows
+                        .map(r => (r.value?._id ?? r.id) as string)
+                        .filter(Boolean)
+                        .map(id => id.split('.'))
+                        .filter(parts => parts.length === 4)
+                        .map(parts => parts[3])
+                    )
+                ];
 
                 for (const roomId of roomIds) {
                     const roomPath = `${ROOMS}.${roomId}`;
