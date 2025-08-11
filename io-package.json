@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
+      "1.0.3": {
+        "en": "Update für fehlerhaftes npm package",
+        "de": "Update für npm Paket",
+        "ru": "Обновление пакета für fehlerhafts npm",
+        "pt": "Actualizar o pacote für fehlerhaftes npm",
+        "nl": "Update für fehlerhoftes npm pakket",
+        "fr": "Mettre à jour le paquet für fehlerhaftes npm",
+        "it": "Aggiornamento del pacchetto npm",
+        "es": "Actualizar el paquete für fehlerhaftes npm",
+        "pl": "Aktualizacja pakietu für fehlerhaftes npm",
+        "uk": "Update für fehlerhaftes npm пакет",
+        "zh-cn": "更新 für fehlerhaftes npm 软件包"
+      },
       "1.0.2": {
         "en": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
         "de": "Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,",
