@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "news": {
+      "1.0.4": {
+        "en": "Status update für globaler Power Toggle fixed",
+        "de": "Statusupdate für globaler Power Toggle fix",
+        "ru": "Обновление статуса для Power Toggle",
+        "pt": "Atualização do estado für globaler Power Alternar corrigido",
+        "nl": "Status update für globler Power Toggle fixed",
+        "fr": "Mise à jour du statut für globaler Power Toggle corrigé",
+        "it": "Aggiornamento dello stato für globaler Power Toggle fisso",
+        "es": "Actualización del estado für globaler Power Toggle fijo",
+        "pl": "Aktualizacja statusu für globaler Power Toggle stałe",
+        "uk": "Статус оновлення für Globaler Power Toggle фіксований",
+        "zh-cn": "状态更新 für Globaler Power 切换已固定"
+      },
       "1.0.3": {
         "en": "Update für fehlerhaftes npm package",
         "de": "Update für npm Paket",

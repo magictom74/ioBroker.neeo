@@ -49,9 +49,9 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.4 (2025-08-11)
 * Status update für globaler Power Toggle fixed
- 
+
 ### 1.0.3 (2025-08-11)
 * Update für fehlerhaftes npm package
 
