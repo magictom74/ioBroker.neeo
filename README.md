@@ -49,6 +49,9 @@ npm install iobroker.neeo
 ```
 
 ## Changelog
+### **WORK IN PROGRESS**
+* Update für fehlerhaftes npm package
+
 ### 1.0.2 (2025-08-11)
 * Globaler Power Toogle und Volume Makros pro Raum hinzugefügt,
 
