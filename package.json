@@ -40,7 +40,7 @@
     "release": "release-script"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.2.3",
+    "@iobroker/adapter-core": "^3.3.2",
     "bonjour": "^3.3.0"
   },
   "devDependencies": {
