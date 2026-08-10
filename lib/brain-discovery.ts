@@ -47,7 +47,7 @@ export async function fetchNeeoBrainModel(adapter: AdapterInstance): Promise<Nee
   adapter.log.debug(`Fetching Brain model from ${baseUrl}`);
 
   try {
-    const response = await axios.get(baseUrl);
+    const response = await axios.get(baseUrl, { timeout: 10000 });
     const data = response.data;
 
     const rooms: BrainRoom[] = [];
@@ -114,7 +114,8 @@ export async function fetchNeeoBrainModel(adapter: AdapterInstance): Promise<Nee
             deviceClass: recipe.mainDeviceType ?? "",
             power: recipe.steps?.find((s: any) => s.componentName)?.componentName ?? "",
             isTurnedOn: recipe.enabled ?? false,
-            scenarioKey: recipe.scenarioKey ?? undefined
+            scenarioKey: recipe.scenarioKey ?? undefined,
+            hidden: recipe.isHiddenRecipe === true
           };
           room.recipes.push(brainRecipe);
           recipes.push(brainRecipe);

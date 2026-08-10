@@ -1,7 +1,21 @@
 {
-    "Main settings": "Adaptereinstellungen",
+    "Main settings": "Haupteinstellungen",
     "brainIp": "Brain IP-Adresse",
     "brainPort": "Brain Port",
     "pollInterval": "Poll Intervall",
-    "debugMode": "Debug Mode"
+    "debugMode": "Debug Mode",
+    "Rooms": "Raeume",
+    "fallbackPollInterval": "Fallback-Poll-Intervall (s)",
+    "fallbackPollIntervalHelp": "Nur Sicherheitsnetz - Statusaenderungen kommen normalerweise in Echtzeit ueber den Event-Stream.",
+    "pushInfo": "Statusaenderungen werden in Echtzeit ueber den Socket.IO-Event-Stream des NEEO Brain empfangen. Das Poll-Intervall unten ist nur ein Fallback.",
+    "roomsInfo": "Hier das Verhalten pro Raum konfigurieren. Die Dropdowns werden direkt vom NEEO Brain befuellt (Instanz muss laufen und verbunden sein).",
+    "Room": "Raum",
+    "Default recipe": "Standard-Recipe",
+    "Delay (s)": "Verzoegerung (s)",
+    "Global toggle": "Globaler Toggle",
+    "Volume device": "Volume-Geraet",
+    "Volume up": "Lauter",
+    "Volume down": "Leiser",
+    "Repeats": "Wiederholungen",
+    "Delay (ms)": "Pause (ms)"
 }
