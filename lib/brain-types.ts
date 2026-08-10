@@ -36,6 +36,7 @@ export interface BrainRecipe {
   power?: string;
   isTurnedOn?: boolean;
   scenarioKey?: string;
+  hidden?: boolean;
 }
 
 export interface BrainMacro {

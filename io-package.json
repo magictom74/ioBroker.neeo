@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "neeo",
-    "version": "1.0.4",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "de": "Echtzeit-Push via Socket.IO statt 60s-Polling, nicht-destruktiver Objekt-Sync (State-Historie ueberlebt Neustarts), Raum-Einstellungen von 0_userdata in die Adapter-Konfiguration verschoben (Dropdowns direkt vom Brain), Command-Buttons repariert, HTTP-Timeouts",
+        "ru": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "pt": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "nl": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "fr": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "it": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "es": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "pl": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "uk": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
+        "zh-cn": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts"
+      },
       "1.0.4": {
         "en": "Status update für globaler Power Toggle fixed",
         "de": "Statusupdate für globaler Power Toggle fix",
@@ -117,7 +130,7 @@
     "type": "multimedia",
     "compact": true,
     "connectionType": "local",
-    "dataSource": "poll",
+    "dataSource": "push",
     "adminUI": {
       "config": "json"
     },
@@ -130,12 +143,14 @@
       {
         "admin": ">=7.4.10"
       }
-    ]
+    ],
+    "messagebox": true
   },
   "native": {
     "brainIp": "",
     "brainPort": 3000,
-    "pollInterval": 60
+    "pollInterval": 300,
+    "rooms": []
   },
   "objects": [],
   "instanceObjects": [

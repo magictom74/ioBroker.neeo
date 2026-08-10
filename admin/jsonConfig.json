@@ -12,8 +12,8 @@
           "default": "",
           "xs": 12,
           "sm": 12,
-          "md": 9,
-          "lg": 9
+          "md": 6,
+          "lg": 4
         },
         "brainPort": {
           "type": "number",
@@ -23,19 +23,121 @@
           "max": 65535,
           "xs": 12,
           "sm": 12,
-          "md": 9,
-          "lg": 9
+          "md": 6,
+          "lg": 4
         },
         "pollInterval": {
           "type": "number",
-          "label": "pollInterval",
-          "default": 60,
-          "xs": 12,
-          "min": 5,
+          "label": "fallbackPollInterval",
+          "help": "fallbackPollIntervalHelp",
+          "default": 300,
+          "min": 30,
           "max": 3600,
+          "xs": 12,
           "sm": 12,
-          "md": 9,
-          "lg": 9
+          "md": 6,
+          "lg": 4
+        },
+        "_pushInfo": {
+          "type": "staticText",
+          "text": "pushInfo",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12
+        }
+      }
+    },
+    "roomsTab": {
+      "type": "panel",
+      "label": "Rooms",
+      "items": {
+        "_roomsInfo": {
+          "type": "staticText",
+          "text": "roomsInfo",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12
+        },
+        "rooms": {
+          "type": "table",
+          "label": "Rooms",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "items": [
+            {
+              "type": "selectSendTo",
+              "attr": "roomKey",
+              "title": "Room",
+              "command": "getRoomOptions",
+              "width": "14%"
+            },
+            {
+              "type": "selectSendTo",
+              "attr": "defaultRecipe",
+              "title": "Default recipe",
+              "command": "getRecipeOptions",
+              "width": "18%"
+            },
+            {
+              "type": "number",
+              "attr": "delay",
+              "title": "Delay (s)",
+              "min": 0,
+              "max": 300,
+              "default": 0,
+              "width": "7%"
+            },
+            {
+              "type": "checkbox",
+              "attr": "includeGlobal",
+              "title": "Global toggle",
+              "default": false,
+              "width": "8%"
+            },
+            {
+              "type": "selectSendTo",
+              "attr": "volDevice",
+              "title": "Volume device",
+              "command": "getDeviceOptions",
+              "width": "15%"
+            },
+            {
+              "type": "selectSendTo",
+              "attr": "volUp",
+              "title": "Volume up",
+              "command": "getMacroOptions",
+              "width": "13%"
+            },
+            {
+              "type": "selectSendTo",
+              "attr": "volDown",
+              "title": "Volume down",
+              "command": "getMacroOptions",
+              "width": "13%"
+            },
+            {
+              "type": "number",
+              "attr": "volRepeat",
+              "title": "Repeats",
+              "min": 1,
+              "max": 20,
+              "default": 5,
+              "width": "6%"
+            },
+            {
+              "type": "number",
+              "attr": "volDelay",
+              "title": "Delay (ms)",
+              "min": 0,
+              "max": 1000,
+              "default": 100,
+              "width": "6%"
+            }
+          ]
         }
       }
     }

@@ -1,5 +1,22 @@
 {
     "neeo adapter settings": "neeo的适配器设置",
     "option1": "选项1",
-    "option2": "选项2"
+    "option2": "选项2",
+    "Main settings": "Main settings",
+    "Rooms": "Rooms",
+    "brainIp": "Brain IP address",
+    "brainPort": "Brain port",
+    "fallbackPollInterval": "Fallback poll interval (s)",
+    "fallbackPollIntervalHelp": "Safety net only - state changes normally arrive in realtime via the brain event stream.",
+    "pushInfo": "State changes are received in realtime via the NEEO Brain Socket.IO event stream. The poll interval below is only a fallback.",
+    "roomsInfo": "Configure per-room behaviour here. The dropdowns are filled directly from the NEEO Brain (the instance must be running and connected).",
+    "Room": "Room",
+    "Default recipe": "Default recipe",
+    "Delay (s)": "Delay (s)",
+    "Global toggle": "Global toggle",
+    "Volume device": "Volume device",
+    "Volume up": "Volume up",
+    "Volume down": "Volume down",
+    "Repeats": "Repeats",
+    "Delay (ms)": "Delay (ms)"
 }
