@@ -17,6 +17,14 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         this.retryTimer = null;
         this.delayTimeouts = new Set();
         this.refreshRunning = false;
+        this.lastExecuteTs = 0;
+        // ------------------------------------------------------------- log labels
+        this.labels = {
+            room: new Map(),
+            device: new Map(),
+            recipe: new Map(),
+            macro: new Map(),
+        };
         this.on("ready", this.onReady.bind(this));
         this.on("unload", this.onUnload.bind(this));
         this.on("message", this.onMessage.bind(this));
@@ -28,6 +36,25 @@ class NeeoAdapter extends adapter_core_1.Adapter {
     roomConfig(roomKey) {
         const rooms = this.config.rooms;
         return rooms?.find((r) => r.roomKey === roomKey);
+    }
+    /** Build key -> name lookups so log messages can show names instead of brain keys. */
+    buildLabels(model) {
+        this.labels.room = new Map(model.rooms.map((r) => [r.id, r.name]));
+        this.labels.device = new Map(model.devices.map((d) => [d.id, d.name]));
+        this.labels.recipe = new Map(model.recipes.map((r) => [r.id, r.name.replace(/\s*-\s*(launch|poweroff)$/i, '')]));
+        const macros = new Map();
+        for (const device of model.devices) {
+            for (const macro of device.macros ?? [])
+                macros.set(macro.id, macro.label || macro.name);
+            for (const command of device.genericMacros ?? [])
+                macros.set(command.id, command.label || command.name);
+        }
+        this.labels.macro = macros;
+    }
+    /** Human-readable label for a brain key, falling back to the key itself. */
+    label(kind, key) {
+        const name = this.labels[kind].get(key);
+        return name ? `"${name}"` : `"${key}"`;
     }
     // ------------------------------------------------------------------ start
     async onReady() {
@@ -45,6 +72,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         }
         this.model = model;
         this.client = new brain_client_1.BrainClient(model.brainIp, model.brainPort);
+        this.buildLabels(model);
         this.log.info(`[main] Brain model loaded: ${model.rooms.length} rooms, ${model.devices.length} devices, ${model.recipes.length} recipes, ${model.scenarios.length} scenarios`);
         await this.syncObjects(model);
         await this.writeStaticStates(model);
@@ -114,6 +142,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
             return;
         }
         this.model = model;
+        this.buildLabels(model);
         await this.syncObjects(model);
         await this.writeStaticStates(model);
         await this.refreshActiveStates();
@@ -123,6 +152,17 @@ class NeeoAdapter extends adapter_core_1.Adapter {
     async refreshActiveStates() {
         if (!this.client || !this.model || this.refreshRunning)
             return;
+        // Right after an execute the brain still reports the OLD state until all
+        // recipe steps (incl. delays) finished - polling now would overwrite the
+        // optimistic states and make them flap. Wait out the settle window.
+        const sinceExecute = Date.now() - this.lastExecuteTs;
+        if (sinceExecute < 10000) {
+            this.log.debug(`[poll] Refresh deferred, recipe still settling (${Math.round(sinceExecute / 1000)}s since execute)`);
+            if (this.refreshTimer)
+                clearTimeout(this.refreshTimer);
+            this.refreshTimer = setTimeout(() => void this.refreshActiveStates(), 10000 - sinceExecute + 500);
+            return;
+        }
         this.refreshRunning = true;
         try {
             const roomActive = {};
@@ -482,12 +522,19 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         if (!roomKey || !recipeKey)
             return;
         await this.client.executeRecipe(roomKey, recipeKey);
-        this.log.info(`[brain] Executed recipe ${recipeKey} (${type}) in room ${roomKey}`);
-        // Optimistic feedback - the push event plus debounced refresh delivers the truth.
+        this.lastExecuteTs = Date.now();
+        this.log.info(`[brain] Executed recipe ${this.label('recipe', recipeKey)} (${type}) in room ${this.label('room', roomKey)}`);
+        // Optimistic feedback - the brain reports isactive only after all recipe
+        // steps (incl. delays) finished, so set the expected state right away;
+        // the push event plus debounced refresh delivers the truth afterwards.
         const isLaunch = type === "launch";
         await this.setStateChangedAsync(`${config_1.ROOMS}.${roomKey}.${config_1.RECIPES}.${recipeKey}.${config_1.ISACTIVE}`, isLaunch, true);
         if (scenarioKey) {
             await this.setStateChangedAsync(`${config_1.ROOMS}.${roomKey}.${config_1.SCENARIOS}.${scenarioKey}.${config_1.ISACTIVE}`, isLaunch, true);
+        }
+        await this.setStateChangedAsync(`${config_1.ROOMS}.${roomKey}.${config_1.ISACTIVE}`, isLaunch, true);
+        if (isLaunch) {
+            await this.setStateChangedAsync(`${config_1.INFO}.${config_1.ISACTIVE}`, true, true);
         }
         this.scheduleRefresh();
     }
@@ -498,7 +545,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
             return;
         }
         await this.client.triggerMacro(roomKey, deviceKey, macroKey);
-        this.log.info(`[brain] Triggered macro ${macroKey} on device ${deviceKey} in room ${roomKey}`);
+        this.log.info(`[brain] Triggered macro ${this.label('macro', macroKey)} on device ${this.label('device', deviceKey)} in room ${this.label('room', roomKey)}`);
     }
     async handleScenarioToggle(native) {
         const { roomKey, scenarioKey, launchId, poweroffId } = native;
@@ -521,12 +568,12 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                     return;
                 }
             }
-            this.log.warn(`[brain] Room ${roomKey} has no active scenario to power off`);
+            this.log.warn(`[brain] Room ${this.label('room', roomKey)} has no active scenario to power off`);
             return;
         }
         const cfg = this.roomConfig(roomKey);
         if (!cfg?.defaultRecipe) {
-            this.log.warn(`[brain] No default recipe configured for room ${roomKey} (see adapter settings, tab Rooms)`);
+            this.log.warn(`[brain] No default recipe configured for room ${this.label('room', roomKey)} (see adapter settings, tab Rooms)`);
             return;
         }
         const recipe = this.model.recipes.find((r) => r.id === cfg.defaultRecipe);
@@ -545,7 +592,7 @@ class NeeoAdapter extends adapter_core_1.Adapter {
         };
         const delayMs = Math.max(0, Number(cfg.delay ?? 0)) * 1000;
         if (delayMs > 0) {
-            this.log.debug(`[brain] Room ${roomKey} power-on delayed by ${delayMs / 1000}s`);
+            this.log.debug(`[brain] Room ${this.label('room', roomKey)} power-on delayed by ${delayMs / 1000}s`);
             this.trackTimeout(exec, delayMs);
         }
         else {
@@ -580,19 +627,36 @@ class NeeoAdapter extends adapter_core_1.Adapter {
                 fire();
         }
     }
+    /** Find the device (and its room) a macro belongs to. */
+    findMacroOwner(macroKey) {
+        for (const device of this.model?.devices ?? []) {
+            const all = [...(device.macros ?? []), ...(device.genericMacros ?? [])];
+            if (all.some((m) => m.id === macroKey)) {
+                return { deviceKey: device.id, roomKey: device.roomId };
+            }
+        }
+        return undefined;
+    }
     async handleVolume(roomKey, up) {
         const cfg = this.roomConfig(roomKey);
         const macroKey = up ? cfg?.volUp : cfg?.volDown;
-        if (!cfg?.volDevice || !macroKey) {
-            this.log.warn(`[brain] Volume ${up ? "up" : "down"} not configured for room ${roomKey} (see adapter settings, tab Rooms)`);
+        if (!macroKey) {
+            this.log.warn(`[brain] Volume ${up ? "up" : "down"} not configured for room ${this.label('room', roomKey)} (see adapter settings, tab Rooms)`);
             return;
         }
-        const repeat = Math.max(1, Math.min(20, Number(cfg.volRepeat) || 1));
-        const delayMs = Math.max(0, Math.min(1000, Number(cfg.volDelay) || 0));
-        this.log.info(`[brain] Volume ${up ? "up" : "down"} x${repeat} in room ${roomKey}`);
+        // Every macro belongs to exactly one device - derive it from the model
+        // instead of trusting a separately configured (and mismatch-prone) device.
+        const owner = this.findMacroOwner(macroKey);
+        if (!owner) {
+            this.log.warn(`[brain] Volume macro ${this.label('macro', macroKey)} not found on any device - check the room settings`);
+            return;
+        }
+        const repeat = Math.max(1, Math.min(20, Number(cfg?.volRepeat) || 1));
+        const delayMs = Math.max(0, Math.min(1000, Number(cfg?.volDelay) || 0));
+        this.log.info(`[brain] Volume ${up ? "up" : "down"} x${repeat} via ${this.label('device', owner.deviceKey)} in room ${this.label('room', owner.roomKey)}`);
         for (let i = 0; i < repeat; i++) {
             try {
-                await this.client.triggerMacro(roomKey, cfg.volDevice, macroKey);
+                await this.client.triggerMacro(owner.roomKey, owner.deviceKey, macroKey);
             }
             catch (err) {
                 this.log.warn(`[brain] Volume macro failed: ${err.message}`);

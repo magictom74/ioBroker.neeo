@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "neeo",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "news": {
+            "2.1.0": {
+                "en": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "de": "Logs zeigen Raum-/Geraete-/Recipe-/Makro-Namen statt Brain-Keys, Volume-Geraet wird automatisch aus dem gewaehlten Makro abgeleitet (behebt HTTP 500 bei falschem Geraet), State-Refresh wartet auf Recipe-Abschluss (kein Flattern nach Execute)",
+                "ru": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "pt": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "nl": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "fr": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "it": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "es": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "pl": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "uk": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)",
+                "zh-cn": "Log messages show room/device/recipe/macro names instead of brain keys, volume device is derived automatically from the selected macro (fixes HTTP 500 on mismatched device), state refresh waits for recipes to settle (no flapping after execute)"
+            },
             "2.0.0": {
                 "en": "Realtime push via Socket.IO instead of 60s polling, non-destructive object sync (state history survives restarts), room settings moved from 0_userdata into the adapter configuration (dropdowns filled from the brain), fixed command buttons, HTTP timeouts",
                 "de": "Echtzeit-Push via Socket.IO statt 60s-Polling, nicht-destruktiver Objekt-Sync (State-Historie ueberlebt Neustarts), Raum-Einstellungen von 0_userdata in die Adapter-Konfiguration verschoben (Dropdowns direkt vom Brain), Command-Buttons repariert, HTTP-Timeouts",

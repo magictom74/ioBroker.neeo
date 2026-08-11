@@ -100,13 +100,6 @@
             },
             {
               "type": "selectSendTo",
-              "attr": "volDevice",
-              "title": "Volume device",
-              "command": "getDeviceOptions",
-              "width": "15%"
-            },
-            {
-              "type": "selectSendTo",
               "attr": "volUp",
               "title": "Volume up",
               "command": "getMacroOptions",

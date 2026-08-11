@@ -1,6 +1,6 @@
 {
   "name": "iobroker.neeo",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "ioBroker Adapter for NEEO Remote Control",
   "author": {
     "name": "tom",
